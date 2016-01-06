@@ -10,7 +10,7 @@ Just another PHP router with following hightlights:
 
 Using composer
 ```sh
-composer require kambo/Router
+composer require kambo/router
 ```
 
 ## Usage
