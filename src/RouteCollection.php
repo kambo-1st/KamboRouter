@@ -3,7 +3,7 @@
 namespace Kambo\Router;
 
 /**
- * Holds all defined routes
+ * A container for all defined routes.
  *
  * @author   Bohuslav Simek <bohuslav@simek.si>
  * @version  GIT $Id$
@@ -13,12 +13,12 @@ namespace Kambo\Router;
  * 
  */
 
-use Kambo\Router\Enum\Methods;
+use Kambo\Router\Enum\Method;
 
 class RouteCollection 
 {
     /**
-     * Holds all routes
+     * Contains all routes
      *
      * @var array
      */    
@@ -34,7 +34,8 @@ class RouteCollection
      * @return self for fluent interface
      */
     public function get($route, $handler) {
-        $this->addRoute(Methods::GET, $route, $handler);
+        $this->addRoute(Method::GET, $route, $handler);
+
         return $this;
     }
 
@@ -48,7 +49,8 @@ class RouteCollection
      * @return self for fluent interface
      */
     public function post($route, $handler) {
-        $this->addRoute(Methods::POST, $route, $handler);
+        $this->addRoute(Method::POST, $route, $handler);
+
         return $this;
     }
 
@@ -62,7 +64,8 @@ class RouteCollection
      * @return self for fluent interface
      */
     public function delete($route, $handler) {
-        $this->addRoute(Methods::DELETE, $route, $handler);
+        $this->addRoute(Method::DELETE, $route, $handler);
+
         return $this;
     }
 
@@ -76,12 +79,13 @@ class RouteCollection
      * @return self for fluent interface
      */
     public function put($route, $handler) {
-        $this->addRoute(Methods::PUT, $route, $handler);
+        $this->addRoute(Method::PUT, $route, $handler);
+
         return $this;
     }
 
     /**
-     * Add route matched with ANY method.
+     * Add route that will be matched to any method.
      * Shortcut for addRoute function with preset ANY method.
      * 
      * @param mixed $route   route definition
@@ -90,14 +94,16 @@ class RouteCollection
      * @return self for fluent interface
      */
     public function any($route, $handler) {
-        $this->addRoute(Methods::ANY, $route, $handler);
+        $this->addRoute(Method::ANY, $route, $handler);
+
         return $this;
     }
 
     /**
-     * Add route matched with POST method.
-     * Shortcut for addRoute function with preset POST method.
+     * Adds a route to the collection.
+     * The data structure used in the $handler depends on the used dispatcher.
      * 
+     * @param mixed $method  HTTP method that will be used for binding
      * @param mixed $route   route definition
      * @param mixed $handler handler that will be executed if the url will match the route
      *
@@ -109,6 +115,7 @@ class RouteCollection
             'handler' => $handler,
             'route'   => $route
         ];
+
         return $this;
     }
 

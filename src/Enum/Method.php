@@ -3,7 +3,7 @@
 namespace Kambo\Router\Enum;
 
 /**
- * XXX
+ * Enum for HTTP methods
  *
  * @author   Bohuslav Simek <bohuslav@simek.si>
  * @version  GIT $Id$
@@ -15,7 +15,7 @@ namespace Kambo\Router\Enum;
 
 use Kambo\Router\Enum\Enum;
 
-class Methods extends Enum
+class Method extends Enum
 {
     CONST GET    = 'GET';
     CONST POST   = 'POST';

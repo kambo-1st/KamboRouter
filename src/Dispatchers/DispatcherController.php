@@ -15,9 +15,9 @@ use Kambo\Router\Interfaces\DispatcherInterface;
  */
 class DispatcherController implements DispatcherInterface
 {
-    CONST CONTROLLER = 'controler';
-    CONST MODULE     = 'module';
-    CONST ACTION     = 'action';
+    const CONTROLLER = 'controler';
+    const MODULE     = 'module';
+    const ACTION     = 'action';
 
     /**
      * Not found handler will be called if nothing has been found.
@@ -47,7 +47,7 @@ class DispatcherController implements DispatcherInterface
         if (isset($handler['controler']) && isset($handler['action'])) {
             list($controllerName, $action) = $this->_resolveControlerAction($parameters, $route["parameters"], $handler);
             $paramMap       = $this->_getMethodParametersNames($controllerName, $this->_actionName.$action);
-            $controller     = new $controllerName;
+            $controller     = new $controllerName();
             $callparameters = $this->_getFunctionArgumentsControlers($paramMap, $parameters, $route["parameters"], $handler);
             
             return call_user_func_array(array($controller, $this->_actionName.$action), $callparameters);
@@ -63,8 +63,11 @@ class DispatcherController implements DispatcherInterface
      */
     public function dispatchNotFound() {
         if (isset($this->_notFoundHandler)) {
-            $notFoundHandler = $this->_notFoundHandler;
-            return call_user_func(array($this->_baseNamespace.'\\'.$this->_controllerName.'\\'.$notFoundHandler['controler'], $this->_actionName.$notFoundHandler['action']));
+            $notFoundHandler    = $this->_notFoundHandler;
+            $controllerName     = $this->_baseNamespace.'\\'.$this->_controllerName.'\\'.$notFoundHandler['controler'];
+            $controllerInstance = new $controllerName();
+
+            return call_user_func([$controllerInstance, $this->_actionName.$notFoundHandler['action']]);
         } else {
             throw new \Exception('Nothing was found');            
         }        
@@ -94,7 +97,7 @@ class DispatcherController implements DispatcherInterface
         return $this;  
     }
 
-    // ------------ PRIVATE FUNCTIONS 
+    // ------------ PRIVATE METHODS 
 
     /**
      * Resolve target name of class (controller) and method (action)
@@ -109,7 +112,7 @@ class DispatcherController implements DispatcherInterface
         $controler = $handler['controler'];
         $action    = $handler['action'];
 
-        if ($this->_isTransfer($controler) && $this->_isTransfer($action)) {
+        if ($this->_isPlaceholder($controler) && $this->_isPlaceholder($action)) {
             $matches = array_values($matches); 
 
             $transformed = [];
@@ -126,7 +129,7 @@ class DispatcherController implements DispatcherInterface
             }
 
             return [$transformed['controler'], $transformed['action']];   
-        } else if  ($this->_isTransfer($action)) {
+        } else if  ($this->_isPlaceholder($action)) {
             $matches = array_values($matches);     
 
             $transformed = [];
@@ -160,7 +163,7 @@ class DispatcherController implements DispatcherInterface
     private function _resolveNamespace($parameters, $handler, $matches) {
         if (isset($handler['module'])) {
             $moduleName = $handler['module'];
-            if  ($this->_isTransfer($moduleName)) {
+            if  ($this->_isPlaceholder($moduleName)) {
                 $transformed = [];
                 foreach ($handler as $target => $placeholder) {
                     foreach ($parameters as $key => $parameterName) {
@@ -180,13 +183,13 @@ class DispatcherController implements DispatcherInterface
     }
 
     /**
-     * Check if variable should be transfered
+     * Check if the variable is placeholder
      * 
      * @param string $value  found route
      *
      * @return boolean true if value should be transfered
      */
-    private function _isTransfer($value) {
+    private function _isPlaceholder($value) {
         if (strrchr($value, '}') && (0 === strpos($value, '{'))) {
             return true;
         }
@@ -210,7 +213,7 @@ class DispatcherController implements DispatcherInterface
 
         if (isset($parameters)) {
             foreach ($handlers as $placeholder) {
-                if ($this->_isTransfer($placeholder)) {
+                if ($this->_isPlaceholder($placeholder)) {
                     foreach ($parameters as $key => $parameterName) {
                         if ($parameterName[0][0] == $placeholder) {
                             unset($parameters[$key]);

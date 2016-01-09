@@ -1,15 +1,17 @@
 {
     "name": "kambo/router",
     "description": "Kambo router",
-    "license": "MIT",
-    "keywords": ["kambo"],
+    "license": "Apache-2.0",
+    "keywords": ["routing", "router"],
     "authors": [
         {
             "name": "Bohuslav Simek",
             "email": "bohuslav@simek.si"
         }
     ],
-    "require": {},
+    "require": {
+        "php": ">=5.4"
+    },
     "autoload": {
         "psr-4": {
             "Kambo\\Router\\": "src"

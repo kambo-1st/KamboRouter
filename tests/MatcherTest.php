@@ -7,11 +7,16 @@ use Kambo\Router\Dispatchers\DispatcherClosure;
 use Kambo\Router\Dispatchers\DispatcherController;
 use Kambo\Router\Matcher;
 
-use Kambo\Router\Enum\Methods;
+use Kambo\Router\Enum\Method;
 
 use Application\Controllers;
 
 class MatcherTest extends \PHPUnit_Framework_TestCase {
+
+
+    protected function setUp() {
+        ini_set('error_reporting', E_STRICT);
+    }
 
     public function testAnonymousFunctionStatic() {
         $routeCollection = new RouteCollection();
@@ -20,7 +25,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         });
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
-        $executed = $matcher->matchRoute(Methods::GET, '/homepage/');
+        $executed = $matcher->matchRoute(Method::GET, '/homepage/');
 
         $this->assertEquals('executed', $executed);
     }
@@ -35,7 +40,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         });
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
-        $executed = $matcher->matchRoute(Methods::POST, '/homepage/');
+        $executed = $matcher->matchRoute(Method::POST, '/homepage/');
 
         $this->assertEquals('post', $executed);
     }
@@ -47,7 +52,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         });
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
-        $executed = $matcher->matchRoute(Methods::POST, '/homepage/');
+        $executed = $matcher->matchRoute(Method::POST, '/homepage/');
 
         $this->assertEquals('any', $executed);
     }
@@ -62,7 +67,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         });
 
         $matcher    = new Matcher($routeCollection, new DispatcherClosure());
-        $executed   = $matcher->matchRoute(Methods::GET, '/iamnotset/');
+        $executed   = $matcher->matchRoute(Method::GET, '/iamnotset/');
     }
 
     public function testRouteNotFoundAnonymousFunction() {
@@ -77,7 +82,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         });
 
         $matcher  = new Matcher($routeCollection, $dispatcher);
-        $executed = $matcher->matchRoute(Methods::GET, '/iamnotset/');
+        $executed = $matcher->matchRoute(Method::GET, '/iamnotset/');
 
         $this->assertEquals('not found', $executed);
     }
@@ -93,7 +98,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setNotFoundHandler(['controler'=>'videoControler', 'action'=>'notFound']);
 
         $matcher  = new Matcher($routeCollection, $dispatcher);
-        $executed = $matcher->matchRoute(Methods::GET, '/iamnotset/');
+        $executed = $matcher->matchRoute(Method::GET, '/iamnotset/');
 
         $this->assertEquals('not found', $executed);
     }
@@ -105,7 +110,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         });
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
-        $executed = $matcher->matchRoute(Methods::GET, '/article/123');    
+        $executed = $matcher->matchRoute(Method::GET, '/article/123');    
         $this->assertEquals(123, $executed);    
     }
 
@@ -118,7 +123,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         });
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
-        $executed = $matcher->matchRoute(Methods::GET, '/user/bohuslav/123');          
+        $executed = $matcher->matchRoute(Method::GET, '/user/bohuslav/123');          
     }
 
     /**
@@ -133,7 +138,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         });
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
-        $executed = $matcher->matchRoute(Methods::GET, '/user/bohuslav');          
+        $executed = $matcher->matchRoute(Method::GET, '/user/bohuslav');          
     }
 
     public function testParticularControllerParticularAction() {
@@ -149,7 +154,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Methods::GET, '/video/123');   
+        $videoId = $matcher->matchRoute(Method::GET, '/video/123');   
 
         $this->assertEquals(123, $videoId);
     }
@@ -166,7 +171,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Methods::GET, '/automatics/video/view/123');   
+        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/view/123');   
 
         $this->assertEquals(123, $videoId);
     }
@@ -183,7 +188,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Methods::GET, '/automatics/video/123/view');   
+        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/123/view');   
 
         $this->assertEquals(123, $videoId);
     }
@@ -201,7 +206,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Methods::GET, '/automatics/video/view/123');   
+        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/view/123');   
 
         $this->assertEquals(123, $videoId);
     }
@@ -218,7 +223,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Methods::GET, '/automatics/123/video/view'); 
+        $videoId = $matcher->matchRoute(Method::GET, '/automatics/123/video/view'); 
 
         $this->assertEquals(123, $videoId);
     }
@@ -235,7 +240,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Methods::GET, '/test/test/view/123'); 
+        $videoId = $matcher->matchRoute(Method::GET, '/test/test/view/123'); 
 
         $this->assertEquals(123, $videoId);
     }
@@ -252,7 +257,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Methods::GET, '/testModule/test/view/123'); 
+        $videoId = $matcher->matchRoute(Method::GET, '/testModule/test/view/123'); 
 
         $this->assertEquals(123, $videoId);
     }

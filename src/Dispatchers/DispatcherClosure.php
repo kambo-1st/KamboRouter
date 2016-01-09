@@ -67,7 +67,7 @@ class DispatcherClosure implements DispatcherInterface
         return $this;  
     }
 
-    // ------------ PRIVATE FUNCTIONS 
+    // ------------ PRIVATE METHODS  
 
     /**
      * Check if variable is closure

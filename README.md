@@ -1,6 +1,7 @@
 # Kambo PHP router
+[![Build Status](https://travis-ci.org/kambo-1st/KamboRouter.svg?branch=master)](https://travis-ci.org/kambo-1st/KamboRouter)
 
-Just another PHP router with following hightlights:
+Just another PHP router with following highlights:
 
 * Support of PSR-7 - HTTP message interfaces
 * Two dispatchers with closure and controller/module supopport 
@@ -8,7 +9,7 @@ Just another PHP router with following hightlights:
 
 ## Install
 
-Using composer
+Prefered way to install library is with composer:
 ```sh
 composer require kambo/router
 ```
@@ -31,7 +32,7 @@ The routes are added by calling `addRoute()` on the RouteCollection instance:
 $routeCollection->addRoute($method, $routePattern, $handler);
 ```
 
-The `$method` is HTTP method name represented by value from Kambo\Router\Enum\Methods enum for which a certain route should match, eg.: Methods::GET
+The `$method` is HTTP method name represented by value from Kambo\Router\Enum\Method enum for which a certain route should match, eg.: Method::GET
 
 By default the `$routePattern` uses a syntax where `{foo}` specifies a placeholder with name `foo`
 and matching the regex `[^/]+`. To adjust the pattern the placeholder matches, you can specify
@@ -39,13 +40,13 @@ a custom pattern by writing `{bar:[0-9]+}`. Some examples:
 
 ```php
 // Matches /user/kambo/123, but not /user/kambo/abc
-$routeCollection->addRoute(Methods::GET, '/user/{name}/{id:\d+}', $handler);
+$routeCollection->addRoute(Method::GET, '/user/{name}/{id:\d+}', $handler);
 ```
 
-A shortcut methods can be also used for all methods:
+A shortcut methods can be also used for all Method:
 
 ```php
-// Shortcut for addRoute(Methods::GET, '/user/{name}/{id:\d+}', $handler);
+// Shortcut for addRoute(Method::GET, '/user/{name}/{id:\d+}', $handler);
 $routeCollection->get('/user/{name}/{id:\d+}', $handler) 
 $routeCollection->post($route, $handler)
 $routeCollection->delete($route, $handler)
