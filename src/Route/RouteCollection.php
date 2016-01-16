@@ -1,6 +1,6 @@
 <?php
 
-namespace Kambo\Router;
+namespace Kambo\Router\Route;
 
 /**
  * A container for all defined routes.
@@ -8,12 +8,13 @@ namespace Kambo\Router;
  * @author   Bohuslav Simek <bohuslav@simek.si>
  * @version  GIT $Id$
  * @license  Apache-2.0
- * @category Router
+ * @category Route
  * @package  Router
  * 
  */
 
 use Kambo\Router\Enum\Method;
+use Kambo\Router\Route\Route;
 
 class RouteCollection 
 {
@@ -110,19 +111,21 @@ class RouteCollection
      * @return self for fluent interface
      */
     public function addRoute($method, $route, $handler) {
-        $this->_routes[] = [
+        /*$this->_routes[] = [
             'method'  => $method,
             'handler' => $handler,
             'route'   => $route
-        ];
+        ];*/
+
+        $this->_routes[] = new Route($method, $route, $handler);
 
         return $this;
     }
 
     /**
-     * Get all defines routes in array.
+     * Get all defines routes in collection.
      *
-     * @return array
+     * @return Route[]
      */
     public function getRoutes() {
         return $this->_routes;

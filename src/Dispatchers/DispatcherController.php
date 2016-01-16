@@ -1,7 +1,9 @@
 <?php
 namespace Kambo\Router\Dispatchers;
 
-use Kambo\Router\Interfaces\DispatcherInterface;
+use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
+
+use Kambo\Router\Route\Route;
 
 /**
  * Dispatcher with module/controller/action support
@@ -28,27 +30,44 @@ class DispatcherController implements DispatcherInterface
 
     private $_baseNamespace = null;
 
+    /**
+     * Name of controller that will for constructing a namespace for proper class resolve.
+     *
+     * @var string
+     */
     private $_controllerName = 'Controllers';
 
+    /**
+     * Name of module that will for constructing a namespace for proper class resolve.
+     *
+     * @var string
+     */
     private $_moduleName = 'Modules';
 
+    /**
+     * Prefix for action method.
+     * Target method is allways called with this prefix.
+     *
+     * @var string
+     */
     private $_actionName = 'action';
 
     /**
      * Dispatch found route with given parameters
      * 
-     * @param mixed $route      found route
+     * @param Route $route      found route
      * @param mixed $parameters parameters for route
      *
      * @return mixed
      */
-    public function dispatchRoute(array $route, array $parameters) {
-        $handler = $route['handler'];
+    public function dispatchRoute(Route $route, array $parameters) {
+        $handler = $route->getHandler();
         if (isset($handler['controler']) && isset($handler['action'])) {
-            list($controllerName, $action) = $this->_resolveControlerAction($parameters, $route["parameters"], $handler);
+            $routeParameters = $route->getParameters();
+            list($controllerName, $action) = $this->_resolveControlerAction($parameters, $routeParameters, $handler);
             $paramMap       = $this->_getMethodParametersNames($controllerName, $this->_actionName.$action);
             $controller     = new $controllerName();
-            $callparameters = $this->_getFunctionArgumentsControlers($paramMap, $parameters, $route["parameters"], $handler);
+            $callparameters = $this->_getFunctionArgumentsControlers($paramMap, $parameters, $routeParameters, $handler);
             
             return call_user_func_array(array($controller, $this->_actionName.$action), $callparameters);
         } else {
@@ -68,9 +87,7 @@ class DispatcherController implements DispatcherInterface
             $controllerInstance = new $controllerName();
 
             return call_user_func([$controllerInstance, $this->_actionName.$notFoundHandler['action']]);
-        } else {
-            throw new \Exception('Nothing was found');            
-        }        
+        }    
     }
 
     /**

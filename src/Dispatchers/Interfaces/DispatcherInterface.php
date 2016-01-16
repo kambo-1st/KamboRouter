@@ -1,5 +1,7 @@
 <?php
-namespace Kambo\Router\Interfaces;
+namespace Kambo\Router\Dispatchers\Interfaces;
+
+use Kambo\Router\Route\Route;
 
 /**
  * Interface for dispatcher
@@ -7,7 +9,7 @@ namespace Kambo\Router\Interfaces;
  * @author   Bohuslav Simek <bohuslav@simek.si>
  * @version  GIT $Id$
  * @license  Apache-2.0
- * @category Interface
+ * @category Dispatchers
  * @package  Router
  * 
  */
@@ -21,7 +23,7 @@ interface DispatcherInterface
      *
      * @return mixed
      */    
-    public function dispatchRoute(array $route, array $parameters);
+    public function dispatchRoute(Route $route, array $parameters);
 
     /**
      * Called if nothing was not found.

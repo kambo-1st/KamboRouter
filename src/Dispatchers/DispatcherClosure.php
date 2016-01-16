@@ -1,7 +1,9 @@
 <?php
 namespace Kambo\Router\Dispatchers;
 
-use Kambo\Router\Interfaces\DispatcherInterface;
+use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
+
+use Kambo\Router\Route\Route;
 
 /**
  * Dispatcher with closure support
@@ -18,23 +20,23 @@ class DispatcherClosure implements DispatcherInterface
     /**
      * Not found handler will be called if nothing has been found.
      *
-     * @var mixed
+     * @var \Closure
      */
     private $_notFoundHandler;
 
     /**
      * Dispatch found route with given parameters
      * 
-     * @param mixed $route      found route
+     * @param Route $route      found route
      * @param mixed $parameters parameters for route
      *
      * @return mixed
      */
-    public function dispatchRoute(array $route, array $parameters) {
-        $handler = $route['handler'];
+    public function dispatchRoute(Route $route, array $parameters) {
+        $handler = $route->getHandler();
         if ($this->_isClosure($handler)) {
             $paramMap  = $this->_getFunctionArgumentsNames($handler); 
-            $arguments = $this->_getFunctionArguments($paramMap, $parameters, $route["parameters"]);
+            $arguments = $this->_getFunctionArguments($paramMap, $parameters, $route->getParameters());
             return call_user_func_array($handler, $arguments);
         } else {
             return $this->dispatchNotFound();
@@ -52,9 +54,7 @@ class DispatcherClosure implements DispatcherInterface
             if ($this->_isClosure($this->_notFoundHandler)) {
                 return call_user_func($this->_notFoundHandler);    
             } 
-        } else {
-            throw new \Exception('Nothing was found');            
-        }        
+        }   
     }
 
     /**

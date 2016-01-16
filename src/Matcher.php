@@ -16,9 +16,11 @@ namespace Kambo\Router;
  * 
  */
 
+use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
+use Kambo\Router\Route\RouteCollection;
+
 use Kambo\Router\Enum\Method;
-use Kambo\Router\Interfaces\DispatcherInterface;
-use Kambo\Router\RouteCollection;
+use Kambo\Router\Enum\RouteMode;
 
 class Matcher 
 {
@@ -50,13 +52,13 @@ class Matcher
     /**
      * Flag for enabling support of mode rewrite.
      *
-     * @var boolean
-     */  
-    private $_modeRewrite = true;
+     * @var string 
+     */
+    private $_urlFormat = RouteMode::PATH_FORMAT;
 
     /**
      * Name of GET parameter from which the route will be get 
-     * if flag of modeRewrite is set as false.
+     * if url format is set to GET_FORMAT.
      *
      * @var string
      */  
@@ -65,14 +67,14 @@ class Matcher
     /**
      * Instance of route collection 
      *
-     * @var Kambo\Router\RouteCollection
+     * @var Kambo\Router\Route\RouteCollection
      */  
     private $_routeCollection;
 
     /**
      * Instance of Dispatcher which will dispatch the request
      *
-     * @var Kambo\Router\Interfaces\DispatcherInterface
+     * @var Kambo\Router\Dispatchers\Interfaces\DispatcherInterface
      */  
     private $_dispatcher;
 
@@ -97,7 +99,7 @@ class Matcher
      * @return mixed
      */
     public function match($request) {
-        return $this->matchRoute($request->getMethod(), $this->_getRoute($request));
+        return $this->matchRoute($request->getMethod(), $this->_getUrl($request));
     }
 
     /**
@@ -105,16 +107,17 @@ class Matcher
      * If route and method match a route is dispatch using provided dispatcher. 
      *
      * @param string $method http method
-     * @param string $route  url
+     * @param string $url    url
      *
      * @return mixed
      */
-    public function matchRoute($method, $route) {
+    public function matchRoute($method, $url) {
         $parsedRoutes = $this->_parseRoutes($this->_routeCollection->getRoutes());
         foreach ($parsedRoutes as $parameters) {
-            $matches = $this->_routeMatch($parameters['routeRegex'], $route);
+            $matches = $this->_routeMatch($parameters->getParsed(), $url);
             if ($matches !== false) {
-                if ($parameters['method'] === $method || $parameters['method'] === Method::ANY) {
+                $routeMethod = $parameters->getMethod();
+                if ($routeMethod === $method || $routeMethod === Method::ANY) {
                     return $this->_dispatcher->dispatchRoute($parameters, $matches);
                 }
             }
@@ -124,25 +127,31 @@ class Matcher
     }  
 
     /**
-     * Enable/disable usage of mode rewrite.
-     * Set to false for disabling mode rewrite, defualt value is true.
+     * Set format for URL resolving.
+     * If the path mode is set to a path a web server must be properly 
+     * configurated, defualt value is PATH_FORMAT.
      *
-     * @param boolean $useModeRewrite
+     * @param string $urlFormat
      *
      * @return self for fluent interface
      */
-    public function setUseModeRewrite($useModeRewrite) {
-        $this->_modeRewrite = $useModeRewrite;   
+    public function setUrlFormat($urlFormat) {
+        if (RouteMode::isInEnum($urlFormat)) {
+            $this->_urlFormat = $urlFormat;    
+        } else {
+            throw new \Exception('Value of urlFormat must be from RouteMode enum.');
+        }
+
         return $this;
     }
 
     /**
-     * Get state of mode rewrite.
+     * Get format for URL resolving.
      *
      * @return boolean
      */
-    public function getUseModeRewrite() {
-        return $this->_modeRewrite;
+    public function getUrlFormat() {
+        return $this->_urlFormat;
     }
 
     // ------------ PRIVATE METHODS
@@ -168,19 +177,21 @@ class Matcher
     /**
      * Prepare regex and parameters for each of routes.
      *
-     * @param string $routes
+     * @param array $routes array with instances of route object
      * 
      * @return array transformed routes
      */    
     private function _parseRoutes($routes) {
         $parsedRoutes = [];
         foreach ($routes as $possition => $route) {
-            $routeNew = strtr($route['route'], $this->_regexShortcuts);
-            list($route['routeRegex'], $route['parameters']) = $this->_transformRoute($routeNew);
-            $parsedRoutes[] = $route;         
+            $routeUrl = strtr($route->getUrl(), $this->_regexShortcuts);
+
+            list($routeRegex, $parameters) = $this->_transformRoute($routeUrl);
+            $route->setParsed($routeRegex)
+                  ->setParameters($parameters);        
         }
 
-        return $parsedRoutes;
+        return $routes;
     }
 
     /**
@@ -191,8 +202,8 @@ class Matcher
      * 
      * @return string
      */   
-    private function _getRoute($request) {
-        if ($this->_modeRewrite) {
+    private function _getUrl($request) {
+        if ($this->_urlFormat === RouteMode::PATH_FORMAT) {
             $path = $request->getUri()->getPath();
         } else {
             $queryParams = $request->getQueryParams();

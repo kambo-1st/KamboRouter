@@ -1,5 +1,5 @@
 # Kambo PHP router
-[![Build Status](https://travis-ci.org/kambo-1st/KamboRouter.svg?branch=master)](https://travis-ci.org/kambo-1st/KamboRouter)
+[![Build Status](https://img.shields.io/travis/kambo-1st/KamboRouter.svg?branch=master&style=flat-square)](https://travis-ci.org/kambo-1st/KamboRouter)
 
 Just another PHP router with following highlights:
 
@@ -25,6 +25,12 @@ Options +FollowSymLinks
 RewriteEngine On
 RewriteRule ^(.*)$ index.php [NC,L]
 ```
+
+For disabling support of mod_rewrite use method setUrlFormat:
+```php
+$matcher->setUrlFormat(RouteMode::GET_FORMAT);
+```
+
 ### Route definition
 The routes are added by calling `addRoute()` on the RouteCollection instance:
 
@@ -69,7 +75,7 @@ Kambo router is using a instance of PSR 7 compatible request object for abstract
 ```php
 <?php
 
-use Kambo\Router\RouteCollection;
+use Kambo\Router\Route\RouteCollection;
 use Kambo\Router\Dispatchers\DispatcherClosure;
 use Kambo\Router\Matcher;
 
@@ -102,7 +108,8 @@ http://{domain}/article/{integer number}
 
 ```php
 <?php
-use Kambo\Router\RouteCollection;
+
+use Kambo\Router\Route\RouteCollection;
 use Kambo\Router\Dispatchers\DispatcherClosure;
 use Kambo\Router\Dispatchers\DispatcherController;
 use Kambo\Router\Matcher;

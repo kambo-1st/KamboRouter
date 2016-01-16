@@ -45,4 +45,14 @@ class Enum {
 
         return self::$_cache[$class];
     }
+
+    /**
+     * Check if a value is in enum
+     *
+     * @return boolean True if the value is in enum
+     */
+    public static function isInEnum($value) {
+        $allItems = array_flip(self::toArray());
+        return isset($allItems[$value]) ? true:false;
+    }
 }
