@@ -62,7 +62,7 @@ $routeCollection->get('/article/{id:\d+}', function($id) {
 ```
 
 ### PSR-7 - HTTP message interfaces
-Kambo router is using a instance of PSR 7 compatible object for abstraction over server variables. Any third party library that implements PSR-7 can be used, also a minimal viable implementation is provided in examples/Request.php 
+Kambo router is using a instance of PSR 7 compatible request object for abstraction over server variables. Any third party library that implements PSR-7 can be used, also a minimal viable implementation is provided in examples/Request.php 
 
 ### Using closure dispatcher
 
@@ -89,7 +89,7 @@ $dispatcherClosure = new DispatcherClosure();
 $matcher           = new Matcher($routeCollection, $dispatcherClosure);
 
 // Start URL matching a PSR 7 compatible object must be provided
-$matcher->match(/* instance of PSR 7 compatible object */);
+$matcher->match(/* instance of PSR 7 compatible request object */);
 ```
 
 This example will define two routes:

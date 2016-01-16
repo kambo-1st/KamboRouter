@@ -17,10 +17,10 @@ use Kambo\Router\Enum\Enum;
 
 class Method extends Enum
 {
-    CONST GET    = 'GET';
-    CONST POST   = 'POST';
-    CONST DELETE = 'DELETE';
-    CONST PUT    = 'PUT';
-    CONST PATCH  = 'PATCH';
-    CONST ANY    = 'ANY';
+    const GET    = 'GET';
+    const POST   = 'POST';
+    const DELETE = 'DELETE';
+    const PUT    = 'PUT';
+    const PATCH  = 'PATCH';
+    const ANY    = 'ANY';
 }
