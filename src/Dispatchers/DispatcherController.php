@@ -76,7 +76,7 @@ class DispatcherController implements DispatcherInterface
     }
 
     /**
-     * Called if nothing was not found 
+     * Called if nothing has been not found 
      * 
      * @return mixed
      */
@@ -98,7 +98,8 @@ class DispatcherController implements DispatcherInterface
      * @return self for fluent interface
      */
     public function setBaseNamespace($baseNamespace) {
-        $this->_baseNamespace = $baseNamespace;  
+        $this->_baseNamespace = $baseNamespace;
+
         return $this; 
     }
 
@@ -111,7 +112,8 @@ class DispatcherController implements DispatcherInterface
      */
     public function setNotFoundHandler($handler) {
         $this->_notFoundHandler = $handler;
-        return $this;  
+
+        return $this;
     }
 
     // ------------ PRIVATE METHODS 
@@ -181,7 +183,6 @@ class DispatcherController implements DispatcherInterface
         if (isset($handler['module'])) {
             $moduleName = $handler['module'];
             if  ($this->_isPlaceholder($moduleName)) {
-                $transformed = [];
                 foreach ($handler as $target => $placeholder) {
                     foreach ($parameters as $key => $parameterName) {
                         if ($parameterName[0][0] == $placeholder) {

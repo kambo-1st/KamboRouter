@@ -79,10 +79,10 @@ class Matcher
     private $_dispatcher;
 
     /**
-     * Object constructor for injecting depedancies
+     * Object constructor for injecting dependencies
      *
-     * @param RouteCollection     $routeCollection 
-     * @param DispatcherInterface $dispatcher 
+     * @param Kambo\Router\Route\RouteCollection $routeCollection 
+     * @param Kambo\Router\Dispatchers\Interfaces\DispatcherInterface $dispatcher
      *
      */
     public function __construct(RouteCollection $routeCollection, DispatcherInterface $dispatcher) {
@@ -182,8 +182,7 @@ class Matcher
      * @return array transformed routes
      */    
     private function _parseRoutes($routes) {
-        $parsedRoutes = [];
-        foreach ($routes as $possition => $route) {
+        foreach ($routes as $route) {
             $routeUrl = strtr($route->getUrl(), $this->_regexShortcuts);
 
             list($routeRegex, $parameters) = $this->_transformRoute($routeUrl);
@@ -229,8 +228,7 @@ class Matcher
         $parameters = $this->_extractVariableRouteParts($route);
         if (isset($parameters)) {
             foreach ($parameters as $variables) {
-                list($valueToReplace, $valueName, $parametersVariables)
-                    = array_pad($variables, 3, null);
+                list($valueToReplace, , $parametersVariables) = array_pad($variables, 3, null);
                 if (isset($parametersVariables)) {
                     $route = str_replace($valueToReplace, '('.reset($parametersVariables).')', $route);
                 } else {

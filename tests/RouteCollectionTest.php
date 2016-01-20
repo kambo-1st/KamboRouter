@@ -3,6 +3,7 @@ namespace Test;
 
 use Kambo\Router\Route\RouteCollection;
 use Kambo\Router\Enum\Method;
+use Kambo\Router\Route\Route;
 
 class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
 
@@ -82,15 +83,45 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Test create method
+     * 
+     * @return void
+     */
+    public function testCreateRoute() {
+        $testInstance = new RouteCollection();
+        $testInstance->createRoute(Method::ANY,'test.com/any', function(){});
+        $testInstance->createRoute(Method::POST,'test.com/post', function(){});
+        $testInstance->createRoute(Method::GET,'test.com/get', function(){});
+
+        $definedRoutes = $testInstance->getRoutes();
+        list($routeAny, $routePost, $routeGet) = $testInstance->getRoutes();   
+
+        $this->assertEquals(Method::ANY, $routeAny->getMethod());
+        $this->assertEquals('test.com/any', $routeAny->getUrl());        
+
+        $this->assertEquals(Method::POST, $routePost->getMethod());
+        $this->assertEquals('test.com/post', $routePost->getUrl());      
+
+        $this->assertEquals(Method::GET, $routeGet->getMethod());
+        $this->assertEquals('test.com/get', $routeGet->getUrl());              
+    }
+
+    /**
      * Test addRoute method
      * 
      * @return void
      */
     public function testAddRoute() {
         $testInstance = new RouteCollection();
-        $testInstance->addRoute(Method::ANY,'test.com/any', function(){});
-        $testInstance->addRoute(Method::POST,'test.com/post', function(){});
-        $testInstance->addRoute(Method::GET,'test.com/get', function(){});
+
+        $route = new Route(Method::ANY,'test.com/any', function(){});
+        $testInstance->addRoute($route);
+
+        $route = new Route(Method::POST,'test.com/post', function(){});
+        $testInstance->addRoute($route);
+
+        $route = new Route(Method::GET,'test.com/get', function(){});
+        $testInstance->addRoute($route);
 
         $definedRoutes = $testInstance->getRoutes();
         list($routeAny, $routePost, $routeGet) = $testInstance->getRoutes();   

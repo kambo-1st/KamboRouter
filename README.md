@@ -1,5 +1,6 @@
 # Kambo PHP router
-[![Build Status](https://img.shields.io/travis/kambo-1st/KamboRouter.svg?branch=master&style=flat-square)](https://travis-ci.org/kambo-1st/KamboRouter)
+[![Build Status](https://travis-ci.org/kambo-1st/KamboRouter.svg?branch=master)](https://travis-ci.org/kambo-1st/KamboRouter)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kambo-1st/KamboRouter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kambo-1st/KamboRouter/?branch=master)
 
 Just another PHP router with following highlights:
 
@@ -32,10 +33,10 @@ $matcher->setUrlFormat(RouteMode::GET_FORMAT);
 ```
 
 ### Route definition
-The routes are added by calling `addRoute()` on the RouteCollection instance:
+The routes are added by calling `createRoute()` on the RouteCollection instance:
 
 ```php
-$routeCollection->addRoute($method, $routePattern, $handler);
+$routeCollection->createRoute($method, $routePattern, $handler);
 ```
 
 The `$method` is HTTP method name represented by value from Kambo\Router\Enum\Method enum for which a certain route should match, eg.: Method::GET
@@ -52,7 +53,7 @@ $routeCollection->addRoute(Method::GET, '/user/{name}/{id:\d+}', $handler);
 A shortcut methods can be also used for all Method:
 
 ```php
-// Shortcut for addRoute(Method::GET, '/user/{name}/{id:\d+}', $handler);
+// Shortcut for createRoute(Method::GET, '/user/{name}/{id:\d+}', $handler);
 $routeCollection->get('/user/{name}/{id:\d+}', $handler) 
 $routeCollection->post($route, $handler)
 $routeCollection->delete($route, $handler)
