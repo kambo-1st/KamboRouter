@@ -42,12 +42,12 @@ class Matcher
      *
      * @var array
      */
-    private $_regexShortcuts = array(
+    private $_regexShortcuts = [
         ':i}'  => ':[0-9]+}',
         ':a}'  => ':[0-9A-Za-z]+}',
         ':h}'  => ':[0-9A-Fa-f]+}',
         ':c}'  => ':[a-zA-Z0-9+_\-\.]+}'
-    );
+    ];
 
     /**
      * Flag for enabling support of mode rewrite.
@@ -67,22 +67,22 @@ class Matcher
     /**
      * Instance of route collection 
      *
-     * @var Kambo\Router\Route\RouteCollection
+     * @var \Kambo\Router\Route\RouteCollection
      */  
     private $_routeCollection;
 
     /**
      * Instance of Dispatcher which will dispatch the request
      *
-     * @var Kambo\Router\Dispatchers\Interfaces\DispatcherInterface
+     * @var \Kambo\Router\Dispatchers\Interfaces\DispatcherInterface
      */  
     private $_dispatcher;
 
     /**
      * Object constructor for injecting dependencies
      *
-     * @param Kambo\Router\Route\RouteCollection $routeCollection 
-     * @param Kambo\Router\Dispatchers\Interfaces\DispatcherInterface $dispatcher
+     * @param \Kambo\Router\Route\RouteCollection $routeCollection 
+     * @param \Kambo\Router\Dispatchers\Interfaces\DispatcherInterface $dispatcher
      *
      */
     public function __construct(RouteCollection $routeCollection, DispatcherInterface $dispatcher) {
@@ -131,7 +131,7 @@ class Matcher
      * If the path mode is set to a path a web server must be properly 
      * configurated, defualt value is PATH_FORMAT.
      *
-     * @param string $urlFormat
+     * @param string $urlFormat value from RouteMode enum
      *
      * @return self for fluent interface
      */
@@ -148,7 +148,7 @@ class Matcher
     /**
      * Get format for URL resolving.
      *
-     * @return boolean
+     * @return string value from RouteMode enum
      */
     public function getUrlFormat() {
         return $this->_urlFormat;
@@ -247,7 +247,7 @@ class Matcher
      *
      * @param string $route
      *
-     * @return array
+     * @return null|array
      */
     private function _extractVariableRouteParts($route) {
         $matches = null;
