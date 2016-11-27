@@ -2,21 +2,17 @@
 
 namespace Kambo\Router\Route;
 
-/**
- * A container for all defined routes.
- *
- * @author   Bohuslav Simek <bohuslav@simek.si>
- * @version  GIT $Id$
- * @license  Apache-2.0
- * @category Route
- * @package  Router
- * 
- */
-
 use Kambo\Router\Enum\Method;
 use Kambo\Router\Route\Route;
 
-class RouteCollection 
+/**
+ * A container for all defined routes.
+ *
+ * @author  Bohuslav Simek <bohuslav@simek.si>
+ * @license Apache-2.0
+ * @package Kambo\Router\Route
+ */
+class Collection 
 {
     /**
      * Contains all routes

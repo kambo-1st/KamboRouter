@@ -2,10 +2,16 @@
 
 namespace Kambo\Router;
 
+use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
+use Kambo\Router\Route\Collection;
+
+use Kambo\Router\Enum\Method;
+use Kambo\Router\Enum\RouteMode;
+
 /**
  * Match provided request object with all defined routes in route collection.
- * If some of routes match a data in provided request. Route is dispatched 
- * with additionall parameters. If nothing is matched execution is passed to 
+ * If some of routes match a data in provided request. Route is dispatched
+ * with additionall parameters. If nothing is matched execution is passed to
  * specific function in dispatcher
  *
  * @author   Bohuslav Simek <bohuslav@simek.si>
@@ -13,15 +19,8 @@ namespace Kambo\Router;
  * @license  Apache-2.0
  * @category Router
  * @package  Router
- * 
+ *
  */
-
-use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
-use Kambo\Router\Route\RouteCollection;
-
-use Kambo\Router\Enum\Method;
-use Kambo\Router\Enum\RouteMode;
-
 class Matcher 
 {
     /**
@@ -67,7 +66,7 @@ class Matcher
     /**
      * Instance of route collection 
      *
-     * @var \Kambo\Router\Route\RouteCollection
+     * @var \Kambo\Router\Route\Collection
      */  
     private $_routeCollection;
 
@@ -81,11 +80,11 @@ class Matcher
     /**
      * Object constructor for injecting dependencies
      *
-     * @param \Kambo\Router\Route\RouteCollection $routeCollection 
+     * @param \Kambo\Router\Route\Collection $routeCollection
      * @param \Kambo\Router\Dispatchers\Interfaces\DispatcherInterface $dispatcher
      *
      */
-    public function __construct(RouteCollection $routeCollection, DispatcherInterface $dispatcher) {
+    public function __construct(Collection $routeCollection, DispatcherInterface $dispatcher) {
         $this->_routeCollection = $routeCollection;
         $this->_dispatcher      = $dispatcher;
     }

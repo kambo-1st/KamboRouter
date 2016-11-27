@@ -1,19 +1,19 @@
 <?php
 namespace Test;
 
-use Kambo\Router\Route\RouteCollection;
+use Kambo\Router\Route\Collection;
 use Kambo\Router\Enum\Method;
 use Kambo\Router\Route\Route;
 
-class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
-
+class CollectionTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * Test get method
      * 
      * @return void
      */
     public function testGet() {
-        $testInstance = new RouteCollection();
+        $testInstance = new Collection();
         $testInstance->get('test.com/test', function(){});
 
         $definedRoute = $testInstance->getRoutes()[0];
@@ -28,7 +28,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */
     public function testPost() {
-        $testInstance = new RouteCollection();
+        $testInstance = new Collection();
         $testInstance->post('test.com/test', function(){});
 
         $definedRoute = $testInstance->getRoutes()[0];
@@ -43,7 +43,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */
     public function testDelete() {
-        $testInstance = new RouteCollection();
+        $testInstance = new Collection();
         $testInstance->delete('test.com/test', function(){});
 
         $definedRoute = $testInstance->getRoutes()[0];
@@ -58,7 +58,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */
     public function testPut() {
-        $testInstance = new RouteCollection();
+        $testInstance = new Collection();
         $testInstance->put('test.com/test', function(){});
 
         $definedRoute = $testInstance->getRoutes()[0];
@@ -73,7 +73,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */
     public function testAny() {
-        $testInstance = new RouteCollection();
+        $testInstance = new Collection();
         $testInstance->any('test.com/test', function(){});
 
         $definedRoute = $testInstance->getRoutes()[0];
@@ -88,7 +88,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */
     public function testCreateRoute() {
-        $testInstance = new RouteCollection();
+        $testInstance = new Collection();
         $testInstance->createRoute(Method::ANY,'test.com/any', function(){});
         $testInstance->createRoute(Method::POST,'test.com/post', function(){});
         $testInstance->createRoute(Method::GET,'test.com/get', function(){});
@@ -112,7 +112,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */
     public function testAddRoute() {
-        $testInstance = new RouteCollection();
+        $testInstance = new Collection();
 
         $route = new Route(Method::ANY,'test.com/any', function(){});
         $testInstance->addRoute($route);

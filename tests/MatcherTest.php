@@ -1,16 +1,13 @@
 <?php
 namespace Test;
 
-use Kambo\Router\Route\RouteCollection;
-use Kambo\Router\Dispatchers\Dispatcher;
+use Kambo\Router\Route\Collection;
 use Kambo\Router\Dispatchers\DispatcherClosure;
 use Kambo\Router\Dispatchers\DispatcherClass;
 use Kambo\Router\Matcher;
 
 use Kambo\Router\Enum\Method;
 use Kambo\Router\Enum\RouteMode;
-
-use Application\Controllers;
 
 class MatcherTest extends \PHPUnit_Framework_TestCase {
     
@@ -20,7 +17,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testAnonymousFunctionStatic() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get('/homepage/', function() {
             return 'executed';     
         });
@@ -37,7 +34,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testAnonymousFunctionStaticGetPost() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get('/homepage/', function() {
             return 'get';     
         });        
@@ -57,7 +54,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testAnonymousFunctionStaticAny() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->any('/homepage/', function() {
             return 'any';     
         });
@@ -74,7 +71,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testRouteNotFoundAnonymousFunction() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get('/homepage/', function() {
             return 'executed';     
         });
@@ -96,7 +93,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testRouteNotFoundControlerHandler() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get('/homepage/', function() {
             return 'executed';     
         });
@@ -117,7 +114,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testAnonymousFunctionSingleParameter() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get('/article/{id:\d+}', function($id) {
             return $id;
         });
@@ -133,7 +130,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testAnonymousFunctionMultipleParameters() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
 
         $routeCollection->get('/user/{name}/{id:\d+}', function($id, $name) {
             $this->assertEquals(123, $id);
@@ -150,7 +147,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testAnonymousFunctionMultipleParametersSomeMissing() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
 
         $routeCollection->get('/user/{name}/{id:\d+}', function($id, $name) {
             $this->assertEquals(123, $id);
@@ -173,7 +170,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */ 
     public function testParticularControllerParticularAction() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
 
         // separated object for route? static route, dynamic route, module route...
         $routeCollection->get(
@@ -196,7 +193,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */     
     public function testParticularControllerDynamicAction() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/automatics/video/{action}/{id:\d+}',
             ['controler'=>'videoControler', 'action'=>'{action}']
@@ -217,7 +214,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */     
     public function testParticularControllerDynamicActionAlternativeOrder() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/automatics/video/{id:\d+}/{action}',
             ['controler'=>'videoControler', 'action'=>'{action}']
@@ -238,7 +235,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */     
     public function testDynamicControllerDynamicAction() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/automatics/{controler}/{action}/{id:\d+}',
             ['controler'=>'{controler}', 'action'=>'{action}']
@@ -259,7 +256,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */     
     public function testDynamicControllerDynamicActionAlternativeOrder() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/automatics/{id:\d+}/{controler}/{action}',
             ['controler'=>'{controler}', 'action'=>'{action}']
@@ -280,7 +277,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */     
     public function testDynamicControllerDynamicActionStaticModule() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/test/{controler}/{action}/{id:\d+}',
             ['module'=> 'TestModule', 'controler'=>'{controler}', 'action'=>'{action}']
@@ -301,7 +298,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */     
     public function testDynamicControllerDynamicActionDynamicModule() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
@@ -322,7 +319,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */      
     public function testDynamicControllerDynamicActionDynamicModuleMatch() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
@@ -349,7 +346,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */  
     public function testWithoutModeRewrite() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
@@ -379,7 +376,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
      * @return void
      */
     public function testWithoutModeRewriteFullUrl() {
-        $routeCollection = new RouteCollection();
+        $routeCollection = new Collection();
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
