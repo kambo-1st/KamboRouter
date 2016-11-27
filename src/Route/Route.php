@@ -3,7 +3,7 @@
 namespace Kambo\Router\Route;
 
 /**
- * Route
+ * Class encapsulating the Route
  *
  * @author   Bohuslav Simek <bohuslav@simek.si>
  * @version  GIT $Id$
@@ -94,7 +94,7 @@ class Route
     /**
      * Get handler
      *
-     * @return string
+     * @return mixed
      */
     public function getHandler() {
         return $this->_handler;
