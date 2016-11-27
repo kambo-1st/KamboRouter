@@ -1,5 +1,5 @@
 <?php
-namespace Test;
+namespace Kambo\Tests\Router;
 
 use Kambo\Router\Route\Collection;
 use Kambo\Router\Dispatchers\DispatcherClosure;
@@ -9,18 +9,22 @@ use Kambo\Router\Matcher;
 use Kambo\Router\Enum\Method;
 use Kambo\Router\Enum\RouteMode;
 
-class MatcherTest extends \PHPUnit_Framework_TestCase {
-    
+class MatcherTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * testAnonymousFunctionStatic
-     * 
+     *
      * @return void
-     */ 
-    public function testAnonymousFunctionStatic() {
+     */
+    public function testAnonymousFunctionStatic()
+    {
         $routeCollection = new Collection();
-        $routeCollection->get('/homepage/', function() {
-            return 'executed';     
-        });
+        $routeCollection->get(
+            '/homepage/',
+            function () {
+                return 'executed';
+            }
+        );
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
         $executed = $matcher->matchRoute(Method::GET, '/homepage/');
@@ -30,17 +34,24 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * testAnonymousFunctionStaticGetPost
-     * 
+     *
      * @return void
-     */ 
-    public function testAnonymousFunctionStaticGetPost() {
+     */
+    public function testAnonymousFunctionStaticGetPost()
+    {
         $routeCollection = new Collection();
-        $routeCollection->get('/homepage/', function() {
-            return 'get';     
-        });        
-        $routeCollection->post('/homepage/', function() {
-            return 'post';     
-        });
+        $routeCollection->get(
+            '/homepage/',
+            function () {
+                return 'get';
+            }
+        );
+        $routeCollection->post(
+            '/homepage/',
+            function () {
+                return 'post';
+            }
+        );
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
         $executed = $matcher->matchRoute(Method::POST, '/homepage/');
@@ -50,14 +61,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * testAnonymousFunctionStaticAny
-     * 
+     *
      * @return void
-     */ 
-    public function testAnonymousFunctionStaticAny() {
+     */
+    public function testAnonymousFunctionStaticAny()
+    {
         $routeCollection = new Collection();
-        $routeCollection->any('/homepage/', function() {
-            return 'any';     
-        });
+        $routeCollection->any(
+            '/homepage/',
+            function () {
+                return 'any';
+            }
+        );
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
         $executed = $matcher->matchRoute(Method::POST, '/homepage/');
@@ -67,18 +82,19 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * testRouteNotFoundAnonymousFunction
-     * 
+     *
      * @return void
-     */ 
-    public function testRouteNotFoundAnonymousFunction() {
+     */
+    public function testRouteNotFoundAnonymousFunction()
+    {
         $routeCollection = new Collection();
-        $routeCollection->get('/homepage/', function() {
-            return 'executed';     
+        $routeCollection->get('/homepage/', function () {
+            return 'executed';
         });
 
         $dispatcher = new DispatcherClosure();
-        $dispatcher->setNotFoundHandler(function() {
-            return 'not found';     
+        $dispatcher->setNotFoundHandler(function () {
+            return 'not found';
         });
 
         $matcher  = new Matcher($routeCollection, $dispatcher);
@@ -89,13 +105,14 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * testRouteNotFoundControlerHandler
-     * 
+     *
      * @return void
-     */ 
-    public function testRouteNotFoundControlerHandler() {
+     */
+    public function testRouteNotFoundControlerHandler()
+    {
         $routeCollection = new Collection();
-        $routeCollection->get('/homepage/', function() {
-            return 'executed';     
+        $routeCollection->get('/homepage/', function () {
+            return 'executed';
         });
 
         $dispatcher = new DispatcherClass($routeCollection);
@@ -110,66 +127,70 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * Test anonymous function with single parameter
-     * 
+     *
      * @return void
-     */ 
-    public function testAnonymousFunctionSingleParameter() {
+     */
+    public function testAnonymousFunctionSingleParameter()
+    {
         $routeCollection = new Collection();
-        $routeCollection->get('/article/{id:\d+}', function($id) {
+        $routeCollection->get('/article/{id:\d+}', function ($id) {
             return $id;
         });
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
-        $executed = $matcher->matchRoute(Method::GET, '/article/123');    
-        $this->assertEquals(123, $executed);    
+        $executed = $matcher->matchRoute(Method::GET, '/article/123');
+        $this->assertEquals(123, $executed);
     }
 
     /**
      * Test anonymous function multiple parameters
-     * 
+     *
      * @return void
-     */ 
-    public function testAnonymousFunctionMultipleParameters() {
+     */
+    public function testAnonymousFunctionMultipleParameters()
+    {
         $routeCollection = new Collection();
 
-        $routeCollection->get('/user/{name}/{id:\d+}', function($id, $name) {
+        $routeCollection->get('/user/{name}/{id:\d+}', function ($id, $name) {
             $this->assertEquals(123, $id);
             $this->assertEquals('bohuslav', $name);
         });
 
         $matcher  = new Matcher($routeCollection, new DispatcherClosure());
-        $executed = $matcher->matchRoute(Method::GET, '/user/bohuslav/123');          
+        $executed = $matcher->matchRoute(Method::GET, '/user/bohuslav/123');
     }
 
     /**
      * Test anonymous function multiple with some parameters missing
-     * 
+     *
      * @return void
-     */ 
-    public function testAnonymousFunctionMultipleParametersSomeMissing() {
+     */
+    public function testAnonymousFunctionMultipleParametersSomeMissing()
+    {
         $routeCollection = new Collection();
 
-        $routeCollection->get('/user/{name}/{id:\d+}', function($id, $name) {
+        $routeCollection->get('/user/{name}/{id:\d+}', function ($id, $name) {
             $this->assertEquals(123, $id);
             $this->assertEquals('bohuslav', $name);
         });
 
         $dispatcherClosure = new DispatcherClosure();
-        $dispatcherClosure->setNotFoundHandler(function() {
-            return true;     
+        $dispatcherClosure->setNotFoundHandler(function () {
+            return true;
         });
 
         $matcher  = new Matcher($routeCollection, $dispatcherClosure);
         $executed = $matcher->matchRoute(Method::GET, '/user/bohuslav');
-        $this->assertEquals(true, $executed);      
+        $this->assertEquals(true, $executed);
     }
 
     /**
      * Test particular controller and particular action
-     * 
+     *
      * @return void
-     */ 
-    public function testParticularControllerParticularAction() {
+     */
+    public function testParticularControllerParticularAction()
+    {
         $routeCollection = new Collection();
 
         // separated object for route? static route, dynamic route, module route...
@@ -182,17 +203,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Method::GET, '/video/123');   
+        $videoId = $matcher->matchRoute(Method::GET, '/video/123');
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
      * Test particular controller dynamic action
-     * 
+     *
      * @return void
-     */     
-    public function testParticularControllerDynamicAction() {
+     */
+    public function testParticularControllerDynamicAction()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/automatics/video/{action}/{id:\d+}',
@@ -203,17 +225,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/view/123');   
+        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/view/123');
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
      * Test particular controller dynamic action
-     * 
+     *
      * @return void
-     */     
-    public function testParticularControllerDynamicActionAlternativeOrder() {
+     */
+    public function testParticularControllerDynamicActionAlternativeOrder()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/automatics/video/{id:\d+}/{action}',
@@ -224,17 +247,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/123/view');   
+        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/123/view');
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
      * Test dynamic controller and dynamic action
-     * 
+     *
      * @return void
-     */     
-    public function testDynamicControllerDynamicAction() {
+     */
+    public function testDynamicControllerDynamicAction()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/automatics/{controler}/{action}/{id:\d+}',
@@ -245,17 +269,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/view/123');   
+        $videoId = $matcher->matchRoute(Method::GET, '/automatics/video/view/123');
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
      * Test dynamic controller and dynamic action other order
-     * 
+     *
      * @return void
-     */     
-    public function testDynamicControllerDynamicActionAlternativeOrder() {
+     */
+    public function testDynamicControllerDynamicActionAlternativeOrder()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/automatics/{id:\d+}/{controler}/{action}',
@@ -266,17 +291,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Method::GET, '/automatics/123/video/view'); 
+        $videoId = $matcher->matchRoute(Method::GET, '/automatics/123/video/view');
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
      * Test dynamic controller, dynamic action in module
-     * 
+     *
      * @return void
-     */     
-    public function testDynamicControllerDynamicActionStaticModule() {
+     */
+    public function testDynamicControllerDynamicActionStaticModule()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/test/{controler}/{action}/{id:\d+}',
@@ -287,17 +313,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Method::GET, '/test/test/view/123'); 
+        $videoId = $matcher->matchRoute(Method::GET, '/test/test/view/123');
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
      * Test dynamic controller, dynamic action in module
-     * 
+     *
      * @return void
-     */     
-    public function testDynamicControllerDynamicActionDynamicModule() {
+     */
+    public function testDynamicControllerDynamicActionDynamicModule()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
@@ -308,17 +335,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchRoute(Method::GET, '/testModule/test/view/123'); 
+        $videoId = $matcher->matchRoute(Method::GET, '/testModule/test/view/123');
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
-     * Test dynamic controller, dynamic action in module REQUEST 
-     * 
+     * Test dynamic controller, dynamic action in module REQUEST
+     *
      * @return void
-     */      
-    public function testDynamicControllerDynamicActionDynamicModuleMatch() {
+     */
+    public function testDynamicControllerDynamicActionDynamicModuleMatch()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
@@ -335,17 +363,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         ];
 
         $enviroment = new Request\Enviroment($enviromentData);
-        $videoId    = $matcher->match(new Request\Request($enviroment)); 
+        $videoId    = $matcher->match(new Request\Request($enviroment));
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
-     * Test dynamic controller, dynamic action in module REQUEST 
-     * 
+     * Test dynamic controller, dynamic action in module REQUEST
+     *
      * @return void
-     */  
-    public function testWithoutModeRewrite() {
+     */
+    public function testWithoutModeRewrite()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
@@ -365,17 +394,18 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         ];
 
         $enviroment = new Request\Enviroment($enviromentData);
-        $videoId    = $matcher->match(new Request\Request($enviroment)); 
+        $videoId    = $matcher->match(new Request\Request($enviroment));
 
         $this->assertEquals(123, $videoId);
     }
 
     /**
-     * Test dynamic controller, dynamic action in module REQUEST 
-     * 
+     * Test dynamic controller, dynamic action in module REQUEST
+     *
      * @return void
      */
-    public function testWithoutModeRewriteFullUrl() {
+    public function testWithoutModeRewriteFullUrl()
+    {
         $routeCollection = new Collection();
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
@@ -395,91 +425,103 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
         ];
 
         $enviroment = new Request\Enviroment($enviromentData);
-        $videoId    = $matcher->match(new Request\Request($enviroment)); 
+        $videoId    = $matcher->match(new Request\Request($enviroment));
 
         $this->assertEquals(123, $videoId);
     }
-
 }
 
 /* partial implementation of PSR-7 request for test purpose */
-namespace Test\Request;
+namespace Kambo\Tests\Router\Request;
 
 class Request
 {
-    private $_serverVariables;
-    private $_uri;
-    private $_enviroment;
-    private $_queryParams;
+    private $serverVariables;
+    private $uri;
+    private $enviroment;
+    private $queryParams;
 
-    function __construct($enviroment = null) {
-        $this->_enviroment = $enviroment;
-        $this->_uri = (new Uri($this->_enviroment));
+    public function __construct($enviroment = null)
+    {
+        $this->enviroment = $enviroment;
+        $this->uri = (new Uri($this->enviroment));
     }
 
-    public function createFromServerVariables($serverVariables) {
-        $this->_serverVariables = $serverVariables;
+    public function createFromServerVariables($serverVariables)
+    {
+        $this->serverVariables = $serverVariables;
     }
 
-    public function getMethod() {
-        return $this->_enviroment->getRequestMethod();
+    public function getMethod()
+    {
+        return $this->enviroment->getRequestMethod();
     }
 
-    public function getQueryParams() {
-        if ($this->_queryParams) {
-            return $this->_queryParams;
+    public function getQueryParams()
+    {
+        if ($this->queryParams) {
+            return $this->queryParams;
         }
 
-        parse_str($this->_uri->getQuery(), $this->_queryParams);
+        parse_str($this->uri->getQuery(), $this->queryParams);
 
-        return $this->_queryParams;
+        return $this->queryParams;
     }
 
-    public function getUri() {
-        return $this->_uri;  
-    }    
+    public function getUri()
+    {
+        return $this->uri;
+    }
 }
 
 class Uri
 {
-    private $_enviroment;
+    private $enviroment;
 
-    function __construct($enviroment = null) {
-        $this->_enviroment = $enviroment;
+    public function __construct($enviroment = null)
+    {
+        $this->enviroment = $enviroment;
     }
 
-    public function getPath() {
-        return $this->_enviroment->getRequestUri();    
+    public function getPath()
+    {
+        return $this->enviroment->getRequestUri();
     }
 
-    public function getQuery() {
-        return $this->_enviroment->getQueryString();    
+    public function getQuery()
+    {
+        return $this->enviroment->getQueryString();
     }
 }
 
 class Enviroment
 {
-    private $_enviromentData = null;
+    private $enviromentData = null;
 
-    function __construct($enviromentData = null) {
+    public function __construct($enviromentData = null)
+    {
         $this->fromArray($enviromentData);
-    }    
-
-    public function fromArray($enviromentData) {
-        $this->_enviromentData = $enviromentData;    
     }
 
-    public function getQueryString() {
-        return $this->_enviromentData['QUERY_STRING'];
+    public function fromArray($enviromentData)
+    {
+        $this->enviromentData = $enviromentData;
     }
 
-    public function getRequestMethod() {
-        return $this->_enviromentData['REQUEST_METHOD'];
+    public function getQueryString()
+    {
+        return $this->enviromentData['QUERY_STRING'];
     }
 
-    public function getRequestUri() {
-        return $this->_enviromentData['REQUEST_URI'];
-    }      
+    public function getRequestMethod()
+    {
+        return $this->enviromentData['REQUEST_METHOD'];
+    }
+
+    public function getRequestUri()
+    {
+        return $this->enviromentData['REQUEST_URI'];
+    }
 }
 
 /* test application */
@@ -487,21 +529,23 @@ namespace Test\Application\Controllers;
 
 class videoControler
 {
-    public function actionView($id) {
+    public function actionView($id)
+    {
         return $id;
     }
 
-    public function actionNotFound() {
+    public function actionNotFound()
+    {
         return 'not found';
     }
-
 }
 
 namespace Test\Application\Modules\TestModule\Controllers;
 
 class testControler
 {
-    public function actionview($id) {
+    public function actionview($id)
+    {
         return $id;
     }
 }

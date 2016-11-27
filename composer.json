@@ -16,5 +16,10 @@
         "psr-4": {
             "Kambo\\Router\\": "src"
         }
-    }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kambo\\Tests\\Router\\": "tests/"
+        }
+    }    
 }
