@@ -4,7 +4,7 @@ namespace Test;
 use Kambo\Router\Route\RouteCollection;
 use Kambo\Router\Dispatchers\Dispatcher;
 use Kambo\Router\Dispatchers\DispatcherClosure;
-use Kambo\Router\Dispatchers\DispatcherController;
+use Kambo\Router\Dispatchers\DispatcherClass;
 use Kambo\Router\Matcher;
 
 use Kambo\Router\Enum\Method;
@@ -101,7 +101,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             return 'executed';     
         });
 
-        $dispatcher = new DispatcherController($routeCollection);
+        $dispatcher = new DispatcherClass($routeCollection);
         $dispatcher->setBaseNamespace('Test\Application');
         $dispatcher->setNotFoundHandler(['controler'=>'videoControler', 'action'=>'notFound']);
 
@@ -181,7 +181,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['controler'=>'videoControler', 'action'=>'view']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -202,7 +202,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['controler'=>'videoControler', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -223,7 +223,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['controler'=>'videoControler', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -244,7 +244,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -265,7 +265,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -286,7 +286,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['module'=> 'TestModule', 'controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -307,7 +307,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -328,7 +328,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -355,7 +355,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);
@@ -385,7 +385,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase {
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherController();
+        $dispatcher = new DispatcherClass();
         $dispatcher->setBaseNamespace('Test\Application');
 
         $matcher = new Matcher($routeCollection, $dispatcher);

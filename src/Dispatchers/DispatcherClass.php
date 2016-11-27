@@ -6,7 +6,7 @@ use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
 use Kambo\Router\Route\Route;
 
 /**
- * Dispatcher with module/controller/action support
+ * Class dispatcher with module/controller/action support
  *
  * @author   Bohuslav Simek <bohuslav@simek.si>
  * @version  GIT $Id$
@@ -15,30 +15,35 @@ use Kambo\Router\Route\Route;
  * @package  Router
  * 
  */
-class DispatcherController implements DispatcherInterface
+class DispatcherClass implements DispatcherInterface
 {
     const CONTROLLER = 'controler';
     const MODULE     = 'module';
     const ACTION     = 'action';
 
     /**
-     * Not found handler will be called if nothing has been found.
+     * Not found handler which will be called if nothing has been found.
      *
      * @var mixed
      */
     private $_notFoundHandler;
 
+    /**
+     * Base namespace for all dispatched classes.
+     *
+     * @var string
+     */
     private $_baseNamespace = null;
 
     /**
-     * Name of controller that will for constructing a namespace for proper class resolve.
+     * Name of class that will be used for constructing a namespace for proper class resolve.
      *
      * @var string
      */
     private $_controllerName = 'Controllers';
 
     /**
-     * Name of module that will for constructing a namespace for proper class resolve.
+     * Name of module that willbe used for constructing a namespace for proper class resolve.
      *
      * @var string
      */
