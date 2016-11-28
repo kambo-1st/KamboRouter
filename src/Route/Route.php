@@ -1,51 +1,47 @@
 <?php
-
 namespace Kambo\Router\Route;
 
 /**
- * Class encapsulating the Route
+ * Class representing the Route
  *
  * @author   Bohuslav Simek <bohuslav@simek.si>
- * @version  GIT $Id$
  * @license  Apache-2.0
- * @category Route
- * @package  Router
- * 
+ * @package  Kambo\Router\Route
  */
-
-
 class Route
 {
-    private $_method  = null;
-    private $_handler = null;
-    private $_url     = null;
+    private $method  = null;
+    private $handler = null;
+    private $url     = null;
 
-    private $_parsedRoute = null;
-    private $_parameters  = null;
+    private $parsedRoute = null;
+    private $parameters  = null;
 
     /**
-     * Object constructor
+     * Route constructor
      *
-     * @param String $method  
-     * @param String $url     
-     * @param Mixed  $handler 
-     *
+     * @param String $method
+     * @param String $url
+     * @param Mixed  $handler
      */
-    public function __construct($method, $url, $handler) {
-        $this->_method  = $method;
-        $this->_handler = $handler;
-        $this->_url     = $url;
+    public function __construct($method, $url, $handler)
+    {
+        $this->method  = $method;
+        $this->handler = $handler;
+        $this->url     = $url;
     }
 
     /**
-     * Set route method
-     * 
+     * Sets route method
+     *
      * @param string $method route method
      *
      * @return self for fluent interface
      */
-    public function setMethod($method) {
-        $this->_method = $method;
+    public function setMethod($method)
+    {
+        $this->method = $method;
+
         return $this;
     }
 
@@ -54,19 +50,22 @@ class Route
      *
      * @return string
      */
-    public function getMethod() {
-        return $this->_method;
+    public function getMethod()
+    {
+        return $this->method;
     }
 
     /**
-     * Set URL for route
-     * 
+     * Sets URL for route
+     *
      * @param mixed $url route url
      *
      * @return self for fluent interface
      */
-    public function setUrl($url) {
-        $this->_url = $url;
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
         return $this;
     }
 
@@ -75,19 +74,23 @@ class Route
      *
      * @return string
      */
-    public function getUrl() {
-        return $this->_url;
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**
-     * Set handler that will be executed if the url will match the route.
-     * 
-     * @param mixed $handler handler that will be executed if the url will match the route
+     * Sets handler that will be executed if the url will match the route.
+     *
+     * @param mixed $handler handler which will be executed if the url will
+     *                       match the route
      *
      * @return self for fluent interface
      */
-    public function setHandler($handler) {
-        $this->_handler = $handler;
+    public function setHandler($handler)
+    {
+        $this->handler = $handler;
+
         return $this;
     }
 
@@ -96,19 +99,22 @@ class Route
      *
      * @return mixed
      */
-    public function getHandler() {
-        return $this->_handler;
+    public function getHandler()
+    {
+        return $this->handler;
     }
 
     /**
-     * Set parsed route.
-     * 
+     * Sets parsed route.
+     *
      * @param mixed $parsed
      *
      * @return self for fluent interface
      */
-    public function setParsed($parsed) {
-        $this->_parsedRoute = $parsed;
+    public function setParsed($parsed)
+    {
+        $this->parsedRoute = $parsed;
+
         return $this;
     }
 
@@ -117,19 +123,22 @@ class Route
      *
      * @return string
      */
-    public function getParsed() {
-        return $this->_parsedRoute;
+    public function getParsed()
+    {
+        return $this->parsedRoute;
     }
 
     /**
-     * Set parameters for route.
-     * 
+     * Sets parameters for route.
+     *
      * @param mixed $parameters
      *
      * @return self for fluent interface
      */
-    public function setParameters($parameters) {
-        $this->_parameters = $parameters;
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
+
         return $this;
     }
 
@@ -138,7 +147,8 @@ class Route
      *
      * @return array
      */
-    public function getParameters() {
-        return $this->_parameters;
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 }
