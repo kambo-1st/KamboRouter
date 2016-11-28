@@ -1,6 +1,8 @@
 # Kambo PHP router
 [![Build Status](https://travis-ci.org/kambo-1st/KamboRouter.svg?branch=master)](https://travis-ci.org/kambo-1st/KamboRouter)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kambo-1st/KamboRouter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kambo-1st/KamboRouter/?branch=master)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/kambo-1st/KamboRouter.svg?style=flat-square)](https://scrutinizer-ci.com/g/kambo-1st/KamboRouter/)
+[![Software License](https://img.shields.io/badge/license-BSD-brightgreen.svg?style=flat-square)](LICENSE)
 
 Just another PHP router with following highlights:
 
@@ -112,7 +114,7 @@ http://{domain}/article/{integer number}
 
 use Kambo\Router\Route\RouteCollection;
 use Kambo\Router\Dispatchers\DispatcherClosure;
-use Kambo\Router\Dispatchers\DispatcherController;
+use Kambo\Router\Dispatchers\DispatcherClass;
 use Kambo\Router\Matcher;
 
 
@@ -132,7 +134,7 @@ $routeCollection->get(
 );
 
 
-$dispatcherController = new DispatcherController();
+$dispatcherController = new DispatcherClass();
 // Set basenamespace for controller resolving.
 $dispatcherController->setBaseNamespace('Application');
 
