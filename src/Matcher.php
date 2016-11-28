@@ -2,6 +2,9 @@
 
 namespace Kambo\Router;
 
+// \spl
+use InvalidArgumentException;
+
 use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
 use Kambo\Router\Route\Collection;
 
@@ -138,7 +141,9 @@ class Matcher
         if (RouteMode::isInEnum($urlFormat)) {
             $this->_urlFormat = $urlFormat;    
         } else {
-            throw new \Exception('Value of urlFormat must be from RouteMode enum.');
+            throw new InvalidArgumentException(
+                'Value of urlFormat must be from RouteMode enum.'
+            );
         }
 
         return $this;
