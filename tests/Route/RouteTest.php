@@ -11,7 +11,7 @@ use Kambo\Router\Enum\Method;
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license Apache-2.0
  */
-class RouteTest
+class RouteTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test get and set route method

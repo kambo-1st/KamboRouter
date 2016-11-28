@@ -429,6 +429,40 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(123, $videoId);
     }
+
+    /**
+     * Test dynamic controller, dynamic action in module REQUEST
+     *
+     * @return void
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidUrlFormat()
+    {
+        $routeCollection = new Collection();
+        $dispatcher      = new DispatcherClass();
+        $dispatcher->setBaseNamespace('Test\Application');
+
+        $matcher = new Matcher($routeCollection, $dispatcher);
+        $matcher->setUrlFormat('invalid value');
+    }
+
+    /**
+     * Test dynamic controller, dynamic action in module REQUEST
+     *
+     * @return void
+     */
+    public function testGetUrlFormat()
+    {
+        $routeCollection = new Collection();
+        $dispatcher      = new DispatcherClass();
+        $dispatcher->setBaseNamespace('Test\Application');
+
+        $matcher = new Matcher($routeCollection, $dispatcher);
+        $matcher->setUrlFormat(RouteMode::GET_FORMAT);
+
+        $this->assertEquals(RouteMode::GET_FORMAT, $matcher->getUrlFormat());
+    }
 }
 
 /* partial implementation of PSR-7 request for test purpose */
