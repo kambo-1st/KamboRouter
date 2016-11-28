@@ -111,9 +111,6 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
     public function testRouteNotFoundControlerHandler()
     {
         $routeCollection = new Collection();
-        $routeCollection->get('/homepage/', function () {
-            return 'executed';
-        });
 
         $dispatcher = new DispatcherClass($routeCollection);
         $dispatcher->setBaseNamespace('Test\Application');
@@ -193,7 +190,6 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
     {
         $routeCollection = new Collection();
 
-        // separated object for route? static route, dynamic route, module route...
         $routeCollection->get(
             '/video/{id:\d+}',
             ['controler'=>'videoControler', 'action'=>'view']
@@ -366,6 +362,46 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
         $videoId    = $matcher->match(new Request\Request($enviroment));
 
         $this->assertEquals(123, $videoId);
+    }
+
+    /**
+     * testRouteNotFoundControlerMissingHandler
+     *
+     * @return void
+     */
+    public function testRouteNotFoundControlerMissingHandler()
+    {
+        $routeCollection = new Collection();
+        $routeCollection->get(
+            '/{module}/{controler}/{action}/{id:\d+}',
+            []
+        );
+
+        $dispatcher      = new DispatcherClass($routeCollection);
+
+        $matcher  = new Matcher($routeCollection, $dispatcher);
+        $executed = $matcher->matchRoute(Method::GET, '/testModule/test/view/123');
+
+        $this->assertNull($executed);
+    }
+
+    /**
+     * testRouteNotFoundControlerHandler
+     *
+     * @return void
+     */
+    public function testRouteNotFoundControlerHandlerWrongRoute()
+    {
+        $routeCollection = new Collection();
+
+        $dispatcher = new DispatcherClass($routeCollection);
+        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setNotFoundHandler(['controler'=>'videoControler', 'action'=>'notFound']);
+
+        $matcher  = new Matcher($routeCollection, $dispatcher);
+        $executed = $matcher->matchRoute(Method::GET, '/iamnotset/');
+
+        $this->assertEquals('not found', $executed);
     }
 
     /**
