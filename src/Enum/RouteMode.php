@@ -1,6 +1,8 @@
 <?php
 namespace Kambo\Router\Enum;
 
+use Kambo\Enum\Enum;
+
 /**
  * Enum for route mode
  *
@@ -8,8 +10,6 @@ namespace Kambo\Router\Enum;
  * @license Apache-2.0
  * @package Kambo\Router\Enum
  */
-use Kambo\Router\Enum\Enum;
-
 class RouteMode extends Enum
 {
     const GET_FORMAT  = 'get';

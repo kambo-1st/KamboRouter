@@ -147,7 +147,7 @@ class Matcher
      */
     public function setUrlFormat($urlFormat)
     {
-        if (RouteMode::isInEnum($urlFormat)) {
+        if (RouteMode::inEnum($urlFormat)) {
             $this->urlFormat = $urlFormat;
         } else {
             throw new InvalidArgumentException(
