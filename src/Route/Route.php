@@ -14,9 +14,6 @@ class Route
     private $handler = null;
     private $url     = null;
 
-    private $parsedRoute = null;
-    private $parameters  = null;
-
     /**
      * Route constructor
      *
@@ -102,53 +99,5 @@ class Route
     public function getHandler()
     {
         return $this->handler;
-    }
-
-    /**
-     * Sets parsed route.
-     *
-     * @param mixed $parsed
-     *
-     * @return self for fluent interface
-     */
-    public function setParsed($parsed)
-    {
-        $this->parsedRoute = $parsed;
-
-        return $this;
-    }
-
-    /**
-     * Get parsed route.
-     *
-     * @return string
-     */
-    public function getParsed()
-    {
-        return $this->parsedRoute;
-    }
-
-    /**
-     * Sets parameters for route.
-     *
-     * @param mixed $parameters
-     *
-     * @return self for fluent interface
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
-
-        return $this;
-    }
-
-    /**
-     * Get parameters of route.
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
     }
 }

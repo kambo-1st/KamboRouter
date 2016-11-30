@@ -1,8 +1,12 @@
 <?php
 namespace Kambo\Router\Dispatchers;
 
+// \Spl
+use ReflectionMethod;
+
+// \Kambo\Router
 use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
-use Kambo\Router\Route\Route;
+use Kambo\Router\Route\ParsedRoute;
 
 /**
  * Class dispatcher with module/controller/action support
@@ -54,19 +58,18 @@ class DispatcherClass implements DispatcherInterface
     /**
      * Dispatch found route with given parameters
      *
-     * @param Route $route      found route
-     * @param mixed $parameters parameters for route
+     * @param ParsedRoute $route found route
      *
      * @return mixed
      */
-    public function dispatchRoute(Route $route, array $parameters)
+    public function dispatchRoute(ParsedRoute $route)
     {
         $handler = $route->getHandler();
         if (isset($handler['controler']) && isset($handler['action'])) {
-            $routeParameters               = $route->getParameters();
+            $routePlaceholders             = $route->getPlaceholders();
             list($controllerName, $action) = $this->resolveControlerAction(
-                $parameters,
-                $routeParameters,
+                $route->getParameters(),
+                $routePlaceholders,
                 $handler
             );
 
@@ -82,8 +85,8 @@ class DispatcherClass implements DispatcherInterface
 
             $methodParameters = $this->getFunctionArgumentsControlers(
                 $parameterMap,
-                $parameters,
-                $routeParameters,
+                $route->getParameters(),
+                $routePlaceholders,
                 $handler
             );
 
@@ -100,7 +103,7 @@ class DispatcherClass implements DispatcherInterface
     }
 
     /**
-     * Called if nothing has been not found
+     * Called if any of route did not match the request.
      *
      * @return mixed
      */
@@ -145,7 +148,7 @@ class DispatcherClass implements DispatcherInterface
     }
 
     /**
-     * Set not found handler
+     * Sets not found handler
      *
      * @param string $handler handler that will be excuted if nothing has been
      *                        found
@@ -288,8 +291,12 @@ class DispatcherClass implements DispatcherInterface
 
      * @return mixed
      */
-    private function getFunctionArgumentsControlers($paramMap, $matches, $parameters, $handlers)
-    {
+    private function getFunctionArgumentsControlers(
+        $paramMap,
+        $matches,
+        $parameters,
+        $handlers
+    ) {
         $output  = [];
         $matches = array_values($matches);
 
@@ -330,7 +337,7 @@ class DispatcherClass implements DispatcherInterface
      */
     private function getMethodParameters($class, $methodName)
     {
-        $methodReflection = new \ReflectionMethod($class, $methodName);
+        $methodReflection = new ReflectionMethod($class, $methodName);
         $parametersName   = [];
         foreach ($methodReflection->getParameters() as $parameter) {
             $parametersName[] = $parameter->name;

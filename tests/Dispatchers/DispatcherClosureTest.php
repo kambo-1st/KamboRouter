@@ -2,7 +2,7 @@
 namespace Kambo\Tests\Router\Dispatchers;
 
 use Kambo\Router\Dispatchers\DispatcherClosure;
-use Kambo\Router\Route\Route;
+use Kambo\Router\Route\ParsedRoute;
 
 /**
  * Description of DispatcherClosureTest
@@ -68,10 +68,12 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
     {
         $dispatcherClosure = new DispatcherClosure();
 
-        $route = $this->getMockBuilder(Route::class)
+        $route = $this->getMockBuilder(ParsedRoute::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
+        $route->method('getPlaceholders')
+              ->willReturn([]);
         $route->method('getParameters')
               ->willReturn([]);
 
@@ -87,7 +89,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertTrue($dispatcherClosure->dispatchRoute($route, []));
+        $this->assertTrue($dispatcherClosure->dispatchRoute($route));
     }
 
     /**
@@ -99,10 +101,12 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
     {
         $dispatcherClosure = new DispatcherClosure();
 
-        $route = $this->getMockBuilder(Route::class)
+        $route = $this->getMockBuilder(ParsedRoute::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
+        $route->method('getPlaceholders')
+              ->willReturn([]);
         $route->method('getParameters')
               ->willReturn([]);
 
@@ -116,7 +120,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertNull($dispatcherClosure->dispatchRoute($route, []));
+        $this->assertNull($dispatcherClosure->dispatchRoute($route));
     }
 
     /**
@@ -128,7 +132,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
     {
         $dispatcherClosure = new DispatcherClosure();
 
-        $route = $this->getMockBuilder(Route::class)
+        $route = $this->getMockBuilder(ParsedRoute::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
@@ -158,8 +162,10 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        $route->method('getParameters')
+        $route->method('getPlaceholders')
               ->willReturn($parameters);
+        $route->method('getParameters')
+              ->willReturn(['foo', 'bar']);
 
         // As PHPUnit is not able to returned non executed callback, it must be
         // packed in other callback.
@@ -179,13 +185,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
         $expectedValues = ['foo', 'bar'];
         $this->assertEquals(
             $expectedValues,
-            $dispatcherClosure->dispatchRoute(
-                $route,
-                [
-                    'foo',
-                    'bar'
-                ]
-            )
+            $dispatcherClosure->dispatchRoute($route)
         );
     }
 }

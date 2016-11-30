@@ -8,6 +8,7 @@ use InvalidArgumentException;
 // \Kambo\Router\
 use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
 use Kambo\Router\Route\Collection;
+use Kambo\Router\Route\ParsedRoute;
 
 // \Kambo\Router\Enum
 use Kambo\Router\Enum\Method;
@@ -86,8 +87,10 @@ class Matcher
      * @param \Kambo\Router\Dispatchers\Interfaces\DispatcherInterface $dispatcher
      *
      */
-    public function __construct(Collection $routeCollection, DispatcherInterface $dispatcher)
-    {
+    public function __construct(
+        Collection $routeCollection,
+        DispatcherInterface $dispatcher
+    ) {
         $this->routeCollection = $routeCollection;
         $this->dispatcher      = $dispatcher;
     }
@@ -120,15 +123,14 @@ class Matcher
     public function matchRoute($method, $url)
     {
         $parsedRoutes = $this->parseRoutes($this->routeCollection->getRoutes());
-        foreach ($parsedRoutes as $parameters) {
-            $matchedRouted = $this->routeMatch($parameters->getParsed(), $url);
-            if ($matchedRouted !== false) {
-                $routeMethod = $parameters->getMethod();
+        foreach ($parsedRoutes as $singleParsedRoute) {
+            list($routeRegex, $route) = $singleParsedRoute;
+            $matchedParameters = $this->routeMatch($routeRegex, $url);
+            if ($matchedParameters !== false) {
+                $route->setParameters($matchedParameters);
+                $routeMethod = $route->getMethod();
                 if ($routeMethod === $method || $routeMethod === Method::ANY) {
-                    return $this->dispatcher->dispatchRoute(
-                        $parameters,
-                        $matchedRouted
-                    );
+                    return $this->dispatcher->dispatchRoute($route);
                 }
             }
         }
@@ -199,14 +201,19 @@ class Matcher
      */
     private function parseRoutes($routes)
     {
+        $parsedRoutes = [];
         foreach ($routes as $route) {
             $routeUrl = strtr($route->getUrl(), $this->regexShortcuts);
 
             list($routeRegex, $parameters) = $this->transformRoute($routeUrl);
-            $route->setParsed($routeRegex)->setParameters($parameters);
+
+            $parsedRoute = new ParsedRoute($route);
+            $parsedRoute->setPlaceholders($parameters);
+
+            $parsedRoutes[] = [$routeRegex, $parsedRoute];
         }
 
-        return $routes;
+        return $parsedRoutes;
     }
 
     /**
@@ -246,7 +253,11 @@ class Matcher
         $parameters = $this->extractVariableRouteParts($route);
         if (isset($parameters)) {
             foreach ($parameters as $variables) {
-                list($valueToReplace, , $parametersVariables) = array_pad($variables, 3, null);
+                list($valueToReplace, , $parametersVariables) = array_pad(
+                    $variables,
+                    3,
+                    null
+                );
                 if (isset($parametersVariables)) {
                     $route = str_replace(
                         $valueToReplace,

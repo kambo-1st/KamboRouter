@@ -2,11 +2,13 @@
 namespace Kambo\Router\Dispatchers;
 
 // \Spl
+use Closure;
 use InvalidArgumentException;
+use ReflectionFunction;
 
 // \Kambo\Router
 use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
-use Kambo\Router\Route\Route;
+use Kambo\Router\Route\ParsedRoute;
 
 /**
  * Dispatcher with closure support
@@ -27,20 +29,19 @@ class DispatcherClosure implements DispatcherInterface
     /**
      * Dispatch found route with given parameters
      *
-     * @param Route $route      found route
-     * @param mixed $parameters parameters for route
+     * @param ParsedRoute $route found route
      *
      * @return mixed
      */
-    public function dispatchRoute(Route $route, array $parameters)
+    public function dispatchRoute(ParsedRoute $route)
     {
         $handler = $route->getHandler();
         if ($this->isClosure($handler)) {
             $paramMap  = $this->getFunctionArgumentsNames($handler);
             $arguments = $this->getFunctionArguments(
                 $paramMap,
-                $parameters,
-                $route->getParameters()
+                $route->getParameters(),
+                $route->getPlaceholders()
             );
 
             return call_user_func_array($handler, $arguments);
@@ -50,9 +51,9 @@ class DispatcherClosure implements DispatcherInterface
     }
 
     /**
-     * Called if nothing was not found.
-     * Can call a a defined handler or simply do nothing if the handler is
-     * not specified.
+     * Called if any of route did not match the request.
+     * Call the defined handler or simply do nothing if the handler is not
+     * specified.
      *
      * @return mixed|null
      */
@@ -66,7 +67,10 @@ class DispatcherClosure implements DispatcherInterface
     }
 
     /**
-     * Set not found handler
+     * Sets not found handler
+     *
+     * @param string $handler handler that will be excuted if nothing has been
+     *                        found
      *
      * @return self for fluent interface
      *
@@ -96,7 +100,7 @@ class DispatcherClosure implements DispatcherInterface
      */
     private function isClosure($type)
     {
-        return is_object($type) && ($type instanceof \Closure);
+        return is_object($type) && ($type instanceof Closure);
     }
 
     /**
@@ -115,7 +119,7 @@ class DispatcherClosure implements DispatcherInterface
         $output  = [];
         $matches = array_values($matches);
         if (isset($parameters)) {
-            foreach ($parameters as $key => $valueName) {
+            foreach ($parameters as $valueName) {
                 foreach ($paramMap as $possition => $value) {
                     if ($value == $valueName[1][0]) {
                         $output[] = $matches[$possition];
@@ -136,7 +140,7 @@ class DispatcherClosure implements DispatcherInterface
      */
     private function getFunctionArgumentsNames($closure)
     {
-        $closureReflection = new \ReflectionFunction($closure);
+        $closureReflection = new ReflectionFunction($closure);
         $result            = [];
         foreach ($closureReflection->getParameters() as $param) {
             $result[] = $param->name;
