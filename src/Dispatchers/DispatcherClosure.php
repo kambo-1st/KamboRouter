@@ -33,7 +33,7 @@ class DispatcherClosure implements DispatcherInterface
      *
      * @return mixed
      */
-    public function dispatchRoute(ParsedRoute $route)
+    public function dispatchRoute(ParsedRoute $route, array $parameters)
     {
         $handler = $route->getHandler();
         if ($this->isClosure($handler)) {

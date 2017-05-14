@@ -5,6 +5,9 @@ namespace Kambo\Router;
 // \spl
 use InvalidArgumentException;
 
+// \Psr\Http\Message
+use Psr\Http\Message\ServerRequestInterface as ServerRequest;
+
 // \Kambo\Router\
 use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
 use Kambo\Router\Route\Collection;
@@ -16,9 +19,8 @@ use Kambo\Router\Enum\RouteMode;
 
 /**
  * Match provided request object with all defined routes in route collection.
- * If some of routes match a data in provided request. Route is dispatched
- * with additionall parameters. If nothing is matched execution is passed to
- * specific function in dispatcher
+ * If some of routes match a data in provided request An instace of matched
+ * route is returned. If nothing is matched false value is returned.
  *
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license Apache-2.0
@@ -74,13 +76,6 @@ class Matcher
     private $routeCollection;
 
     /**
-     * Instance of Dispatcher which will dispatch the request
-     *
-     * @var \Kambo\Router\Dispatchers\Interfaces\DispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
      * Constructor
      *
      * @param \Kambo\Router\Route\Collection                           $routeCollection
@@ -88,27 +83,38 @@ class Matcher
      *
      */
     public function __construct(
-        Collection $routeCollection,
-        DispatcherInterface $dispatcher
+        Collection $routeCollection
     ) {
         $this->routeCollection = $routeCollection;
-        $this->dispatcher      = $dispatcher;
     }
 
     /**
      * Match request with provided routes.
      * Get method and url from provided request and start matching.
      *
-     * @param object $request instance of PSR 7 compatible request object
+     * @param ServerRequest $request instance of PSR 7 compatible request object
      *
      * @return mixed
      */
-    public function match($request)
+    public function matchRequest(/*ServerRequest */ $request)
     {
-        return $this->matchRoute(
+        return $this->getMatchRoute(
             $request->getMethod(),
             $this->getUrl($request)
         );
+    }
+
+    /**
+     * Match url and method with provided routes.
+     *
+     * @param string $method http method
+     * @param string $url    url
+     *
+     * @return mixed
+     */
+    public function matchPathAndMethod($method, $url)
+    {
+        return $this->getMatchRoute($method, $url);
     }
 
     /**
@@ -120,22 +126,23 @@ class Matcher
      *
      * @return mixed
      */
-    public function matchRoute($method, $url)
+    private function getMatchRoute($method, $url)
     {
-        $parsedRoutes = $this->parseRoutes($this->routeCollection->getRoutes());
+        $parsedRoutes = $this->parseRoutes($this->routeCollection);
         foreach ($parsedRoutes as $singleParsedRoute) {
             list($routeRegex, $route) = $singleParsedRoute;
             $matchedParameters = $this->routeMatch($routeRegex, $url);
             if ($matchedParameters !== false) {
-                $route->setParameters($matchedParameters);
                 $routeMethod = $route->getMethod();
                 if ($routeMethod === $method || $routeMethod === Method::ANY) {
-                    return $this->dispatcher->dispatchRoute($route);
+                    $route->setParameters($matchedParameters);
+
+                    return $route;
                 }
             }
         }
 
-        return $this->dispatcher->dispatchNotFound();
+        return false;
     }
 
     /**
@@ -173,7 +180,7 @@ class Matcher
     // ------------ PRIVATE METHODS
 
     /**
-     * Match route with provideed regex.
+     * Match route by provided regex.
      *
      * @param string $routeRegex
      * @param string $route
@@ -199,7 +206,7 @@ class Matcher
      *
      * @return array transformed routes
      */
-    private function parseRoutes($routes)
+    private function parseRoutes(Collection $routes)
     {
         $parsedRoutes = [];
         foreach ($routes as $route) {

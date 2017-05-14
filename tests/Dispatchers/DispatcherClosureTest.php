@@ -5,9 +5,7 @@ use Kambo\Router\Dispatchers\DispatcherClosure;
 use Kambo\Router\Route\ParsedRoute;
 
 /**
- * Description of DispatcherClosureTest
- *
- * Lorem ipsum dolor
+ * Unit tests for DispatcherClosure class
  *
  * @package Kambo\Tests\Router\Dispatchers
  * @author  Bohuslav Simek <bohuslav@simek.si>
@@ -89,7 +87,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertTrue($dispatcherClosure->dispatchRoute($route));
+        $this->assertTrue($dispatcherClosure->dispatchRoute($route, []));
     }
 
     /**
@@ -120,7 +118,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertNull($dispatcherClosure->dispatchRoute($route));
+        $this->assertNull($dispatcherClosure->dispatchRoute($route, []));
     }
 
     /**
@@ -185,7 +183,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
         $expectedValues = ['foo', 'bar'];
         $this->assertEquals(
             $expectedValues,
-            $dispatcherClosure->dispatchRoute($route)
+            $dispatcherClosure->dispatchRoute($route, [])
         );
     }
 }
