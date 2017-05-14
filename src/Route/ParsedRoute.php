@@ -6,9 +6,9 @@ namespace Kambo\Router\Route;
  * Parsed route from matcher class.
  * Class is implemented as a proxy for existing Route object.
  *
- * @package Kambo\Router\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license MIT
+ * @license Apache-2.0
+ * @package Kambo\Router\Route
  */
 class ParsedRoute
 {
@@ -38,9 +38,21 @@ class ParsedRoute
      *
      * @param \Kambo\Router\Route $route
      */
-    public function __construct(Route $route)
+    public function __construct(/*Route*/ $route)
     {
         $this->route = $route;
+    }
+
+    /**
+     * Magic method for proxing methods call to parent object.
+     *
+     * @param string $name      Method name
+     * @param array  $arguments The parameters to be passed to the method,
+     *                          as an indexed array.
+     */
+    public function __call($name, array $arguments)
+    {
+        return call_user_func_array([$this->route, $name], $arguments);
     }
 
     /**
