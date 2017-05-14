@@ -62,7 +62,7 @@ class DispatcherClass implements DispatcherInterface
      *
      * @return mixed
      */
-    public function dispatchRoute(ParsedRoute $route, array $parameters)
+    public function dispatchRoute(ParsedRoute $route)
     {
         $handler = $route->getHandler();
         if (isset($handler['controler']) && isset($handler['action'])) {

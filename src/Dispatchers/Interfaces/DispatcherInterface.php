@@ -19,7 +19,7 @@ interface DispatcherInterface
      *
      * @return mixed
      */
-    public function dispatchRoute(ParsedRoute $route, array $parameters);
+    public function dispatchRoute(ParsedRoute $route);
 
     /**
      * Called if any of route did not match the request.
