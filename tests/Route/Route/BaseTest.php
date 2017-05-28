@@ -1,6 +1,8 @@
 <?php
 namespace Kambo\Tests\Router\Route;
 
+use PHPUnit\Framework\TestCase;
+
 use Kambo\Router\Route\Route\Base;
 use Kambo\Router\Enum\Method;
 
@@ -11,7 +13,7 @@ use Kambo\Router\Enum\Method;
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license MIT
  */
-class BaseTest extends \PHPUnit_Framework_TestCase
+class BaseTest extends TestCase
 {
     /**
      * Test get and set route method

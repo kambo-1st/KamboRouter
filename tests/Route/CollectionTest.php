@@ -1,6 +1,8 @@
 <?php
 namespace Kambo\Tests\Router\Route;
 
+use PHPUnit\Framework\TestCase;
+
 use Kambo\Router\Route\Builder\Base as BaseBuilder;
 use Kambo\Router\Route\Collection;
 use Kambo\Router\Route\Route\Base as BaseRouter;
@@ -14,7 +16,7 @@ use Kambo\Router\Enum\Method;
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license MIT
  */
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends TestCase
 {
     /**
      * Test get method

@@ -1,6 +1,8 @@
 <?php
 namespace Kambo\Tests\Router\Matcher;
 
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../Request/Enviroment.php';
 require_once __DIR__.'/../Request/Request.php';
 require_once __DIR__.'/../Request/Uri.php';
@@ -33,7 +35,7 @@ use Kambo\Tests\Router\Request\Request;
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license MIT
  */
-class RegexTest extends \PHPUnit_Framework_TestCase
+class RegexTest extends TestCase
 {
     /**
      * testAnonymousFunctionStatic

@@ -1,6 +1,8 @@
 <?php
 namespace Kambo\Tests\Router\Dispatcher;
 
+use PHPUnit\Framework\TestCase;
+
 use Kambo\Router\Dispatcher\ClosureAutoBind;
 use Kambo\Router\Route\Route\Parsed;
 
@@ -11,7 +13,7 @@ use Kambo\Router\Route\Route\Parsed;
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license MIT
  */
-class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
+class DispatcherClosureTest extends TestCase
 {
     /**
      * Test testDispatchNotFound method
