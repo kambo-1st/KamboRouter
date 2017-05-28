@@ -3,13 +3,13 @@ language: php
 php:
   - 7.0
   - 7.1
-  - 7.2  
+  - master  
   - hhvm
 
 matrix:
   allow_failures:
     - php: hhvm
-    - php: 7.2
+    - php: master
 
 before_script:
   - composer self-update
