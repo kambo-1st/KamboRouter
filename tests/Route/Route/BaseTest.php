@@ -1,17 +1,17 @@
 <?php
 namespace Kambo\Tests\Router\Route;
 
-use Kambo\Router\Route\Route;
+use Kambo\Router\Route\Route\Base;
 use Kambo\Router\Enum\Method;
 
 /**
  * Test for Route class
  *
- * @package Test
+ * @package Kambo\Tests\Router\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license Apache-2.0
  */
-class RouteTest extends \PHPUnit_Framework_TestCase
+class BaseTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test get and set route method
@@ -20,7 +20,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetMethod()
     {
-        $testRoute = new Route(
+        $testRoute = new Base(
             Method::POST,
             'foo',
             function () {
@@ -41,7 +41,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetUrl()
     {
-        $testRoute = new Route(
+        $testRoute = new Base(
             Method::POST,
             'foo',
             function () {
@@ -62,7 +62,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetHandler()
     {
-        $testRoute = new Route(
+        $testRoute = new Base(
             Method::POST,
             'foo',
             function () {

@@ -1,24 +1,39 @@
 <?php
-namespace Kambo\Tests\Router;
+namespace Kambo\Tests\Router\Matcher;
+
+require_once __DIR__.'/../Request/Enviroment.php';
+require_once __DIR__.'/../Request/Request.php';
+require_once __DIR__.'/../Request/Uri.php';
 
 // \Psr\Http\Message
 use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 
 // \Kambo\Router\Route
 use Kambo\Router\Route\Collection;
-use Kambo\Router\Route\RouteBuilder;
-use Kambo\Router\Route\ParsedRoute;
+use Kambo\Router\Route\Builder\Base;
+use Kambo\Router\Route\Route\Parsed;
 
-// \Kambo\Router\Dispatchers
-use Kambo\Router\Dispatchers\DispatcherClosure;
-use Kambo\Router\Dispatchers\DispatcherClass;
+// \Kambo\Router\Dispatcher
+use Kambo\Router\Dispatcher\ClosureAutoBind;
+use Kambo\Router\Dispatcher\ClassAutoBind;
 
-use Kambo\Router\Matcher;
+// \Kambo\Router\Matcher
+use Kambo\Router\Matcher\Regex;
 
 use Kambo\Router\Enum\Method;
 use Kambo\Router\Enum\RouteMode;
 
-class MatcherTest extends \PHPUnit_Framework_TestCase
+use Kambo\Tests\Router\Request\Enviroment;
+use Kambo\Tests\Router\Request\Request;
+
+/**
+ * Tests for Regex class
+ *
+ * @package Kambo\Tests\Router\Matcher
+ * @author  Bohuslav Simek <bohuslav@simek.si>
+ * @license Apache-2.0
+ */
+class RegexTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * testAnonymousFunctionStatic
@@ -27,7 +42,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnonymousFunctionStatic()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/homepage/',
             function () {
@@ -35,10 +50,10 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $matcher      = new Matcher($routeCollection);
+        $matcher      = new Regex($routeCollection);
         $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/homepage/');
 
-        $this->assertInstanceOf(ParsedRoute::class, $matchedRoute);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
     }
 
     /**
@@ -48,7 +63,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnonymousFunctionStaticGetPost()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/homepage/',
             function () {
@@ -62,10 +77,10 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $matcher      = new Matcher($routeCollection);
+        $matcher      = new Regex($routeCollection);
         $matchedRoute = $matcher->matchPathAndMethod(Method::POST, '/homepage/');
 
-        $this->assertInstanceOf(ParsedRoute::class, $matchedRoute);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
         $this->assertEquals('POST', $matchedRoute->getMethod());
     }
 
@@ -76,7 +91,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnonymousFunctionStaticAny()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->any(
             '/homepage/',
             function () {
@@ -84,10 +99,10 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $matcher      = new Matcher($routeCollection);
+        $matcher      = new Regex($routeCollection);
         $matchedRoute = $matcher->matchPathAndMethod(Method::POST, '/homepage/');
 
-        $this->assertInstanceOf(ParsedRoute::class, $matchedRoute);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
         $this->assertEquals('ANY', $matchedRoute->getMethod());
     }
 
@@ -98,12 +113,12 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteNotFoundAnonymousFunction()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get('/homepage/', function () {
             return 'executed';
         });
 
-        $matcher = new Matcher($routeCollection);
+        $matcher = new Regex($routeCollection);
         $result  = $matcher->matchPathAndMethod(Method::GET, '/iamnotset/');
 
         $this->assertFalse($result);
@@ -116,9 +131,9 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteNotFoundControlerHandler()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
 
-        $matcher = new Matcher($routeCollection);
+        $matcher = new Regex($routeCollection);
         $result  = $matcher->matchPathAndMethod(Method::GET, '/iamnotset/');
 
         $this->assertFalse($result);
@@ -131,15 +146,15 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnonymousFunctionSingleParameter()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get('/article/{id:\d+}', function ($id) {
             return $id;
         });
 
-        $matcher      = new Matcher($routeCollection, new DispatcherClosure());
+        $matcher      = new Regex($routeCollection, new ClosureAutoBind());
         $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/article/123');
 
-        $this->assertInstanceOf(ParsedRoute::class, $matchedRoute);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
         $this->assertEquals(['123'], $matchedRoute->getParameters());
     }
 
@@ -150,15 +165,15 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnonymousFunctionMultipleParameters()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
 
         $routeCollection->get('/user/{name}/{id:\d+}', function () {
         });
 
-        $matcher      = new Matcher($routeCollection);
+        $matcher      = new Regex($routeCollection);
         $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/user/bohuslav/123');
 
-        $this->assertInstanceOf(ParsedRoute::class, $matchedRoute);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
         $this->assertEquals(['bohuslav','123'], $matchedRoute->getParameters());
     }
 
@@ -169,19 +184,19 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnonymousFunctionMultipleParametersSomeMissing()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
 
         $routeCollection->get('/user/{name}/{id:\d+}', function ($id, $name) {
             $this->assertEquals(123, $id);
             $this->assertEquals('bohuslav', $name);
         });
 
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
         $dispatcherClosure->setNotFoundHandler(function () {
             return true;
         });
 
-        $matcher = new Matcher($routeCollection);
+        $matcher = new Regex($routeCollection);
         $result  = $matcher->matchPathAndMethod(Method::GET, '/user/bohuslav');
 
         $this->assertFalse($result);
@@ -194,20 +209,21 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testParticularControllerParticularAction()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
 
         $routeCollection->get(
             '/video/{id:\d+}',
-            ['controler'=>'videoControler', 'action'=>'view']
+            [
+                'controler'=>'videoControler',
+                'action'=>'view'
+            ]
         );
 
-        $matcher      = new Matcher($routeCollection);
+        $matcher      = new Regex($routeCollection);
         $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/video/123');
 
-        //$this->assertEquals(123, $videoId);
-        $this->assertInstanceOf(ParsedRoute::class, $matchedRoute);
-
-        var_dump($matchedRoute->getParameters());
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals([123], $matchedRoute->getParameters());
     }
 
     /**
@@ -217,19 +233,23 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testParticularControllerDynamicAction()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/automatics/video/{action}/{id:\d+}',
-            ['controler'=>'videoControler', 'action'=>'{action}']
+            [
+                'controler'=>'videoControler',
+                'action'=>'{action}'
+            ]
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchPathAndMethod(Method::GET, '/automatics/video/view/123');
+        $matcher      = new Regex($routeCollection, $dispatcher);
+        $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/automatics/video/view/123');
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals(['view', 123], $matchedRoute->getParameters());
     }
 
     /**
@@ -239,19 +259,23 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testParticularControllerDynamicActionAlternativeOrder()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/automatics/video/{id:\d+}/{action}',
-            ['controler'=>'videoControler', 'action'=>'{action}']
+            [
+                'controler'=>'videoControler',
+                'action'=>'{action}'
+            ]
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchPathAndMethod(Method::GET, '/automatics/video/123/view');
+        $matcher      = new Regex($routeCollection, $dispatcher);
+        $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/automatics/video/123/view');
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals([123, 'view'], $matchedRoute->getParameters());
     }
 
     /**
@@ -261,19 +285,23 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testDynamicControllerDynamicAction()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/automatics/{controler}/{action}/{id:\d+}',
-            ['controler'=>'{controler}', 'action'=>'{action}']
+            [
+                'controler' => '{controler}',
+                'action' => '{action}'
+            ]
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchPathAndMethod(Method::GET, '/automatics/video/view/123');
+        $matcher      = new Regex($routeCollection, $dispatcher);
+        $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/automatics/video/view/123');
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals(['video', 'view', 123], $matchedRoute->getParameters());
     }
 
     /**
@@ -283,19 +311,23 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testDynamicControllerDynamicActionAlternativeOrder()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/automatics/{id:\d+}/{controler}/{action}',
-            ['controler'=>'{controler}', 'action'=>'{action}']
+            [
+                'controler' => '{controler}',
+                'action' => '{action}'
+            ]
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchPathAndMethod(Method::GET, '/automatics/123/video/view');
+        $matcher      = new Regex($routeCollection, $dispatcher);
+        $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/automatics/123/video/view');
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals([123, 'video', 'view'], $matchedRoute->getParameters());
     }
 
     /**
@@ -305,19 +337,24 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testDynamicControllerDynamicActionStaticModule()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/test/{controler}/{action}/{id:\d+}',
-            ['module'=> 'TestModule', 'controler'=>'{controler}', 'action'=>'{action}']
+            [
+                'module' => 'TestModule',
+                'controler' => '{controler}',
+                'action' => '{action}'
+            ]
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchPathAndMethod(Method::GET, '/test/test/view/123');
+        $matcher      = new Regex($routeCollection, $dispatcher);
+        $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/test/test/view/123');
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals(['test', 'view', 123], $matchedRoute->getParameters());
     }
 
     /**
@@ -327,19 +364,24 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testDynamicControllerDynamicActionDynamicModule()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
-            ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
+            [
+                'module' => '{module}',
+                'controler' =>'{controler}',
+                'action' =>'{action}'
+            ]
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
-        $videoId = $matcher->matchPathAndMethod(Method::GET, '/testModule/test/view/123');
+        $matcher      = new Regex($routeCollection, $dispatcher);
+        $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/testModule/test/view/123');
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals(['testModule', 'test', 'view', 123], $matchedRoute->getParameters());
     }
 
     /**
@@ -349,65 +391,51 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testDynamicControllerDynamicActionDynamicModuleMatch()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
-            ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
+            [
+                'module' => '{module}',
+                'controler' => '{controler}',
+                'action' => '{action}'
+            ]
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
+        $matcher = new Regex($routeCollection, $dispatcher);
         $enviromentData = [
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/testModule/test/view/123',
         ];
 
-        $enviroment = new Request\Enviroment($enviromentData);
-        $videoId    = $matcher->matchRequest(new Request\Request($enviroment));
+        $enviroment   = new Enviroment($enviromentData);
+        $matchedRoute = $matcher->matchRequest(new Request($enviroment));
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals(['testModule', 'test', 'view', 123], $matchedRoute->getParameters());
     }
 
     /**
-     * testRouteNotFoundControlerMissingHandler
-     *
-     * @return void
-     */
-    public function testRouteNotFoundControlerMissingHandler()
-    {
-        $routeCollection = new Collection(new RouteBuilder());
-        $routeCollection->get(
-            '/{module}/{controler}/{action}/{id:\d+}',
-            []
-        );
-
-        $dispatcher      = new DispatcherClass($routeCollection);
-
-        $matcher  = new Matcher($routeCollection, $dispatcher);
-        $executed = $matcher->matchPathAndMethod(Method::GET, '/testModule/test/view/123');
-
-        $this->assertNull($executed);
-    }
-
-    /**
-     * testRouteNotFoundControlerHandler
+     * testRouteNotFoundControlerHandlerWrongRoute
      *
      * @return void
      */
     public function testRouteNotFoundControlerHandlerWrongRoute()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
+        $routeCollection->get(
+            '/{module}/{controler}/{action}/{id:\d+}',
+            []
+        );
 
-        $dispatcher = new DispatcherClass($routeCollection);
-        $dispatcher->setBaseNamespace('Test\Application');
-        $dispatcher->setNotFoundHandler(['controler'=>'videoControler', 'action'=>'notFound']);
+        $dispatcher = new ClassAutoBind($routeCollection);
 
-        $matcher  = new Matcher($routeCollection, $dispatcher);
-        $executed = $matcher->matchPathAndMethod(Method::GET, '/iamnotset/');
+        $matcher      = new Regex($routeCollection, $dispatcher);
+        $matchedRoute = $matcher->matchPathAndMethod(Method::GET, '/testModule');
 
-        $this->assertEquals('not found', $executed);
+        $this->assertFalse($matchedRoute);
     }
 
     /**
@@ -417,16 +445,16 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testWithoutModeRewrite()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
+        $matcher = new Regex($routeCollection, $dispatcher);
         $matcher->setUrlFormat(RouteMode::GET_FORMAT);
 
         $enviromentData = [
@@ -435,10 +463,11 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             'REQUEST_URI' => '/',
         ];
 
-        $enviroment = new Request\Enviroment($enviromentData);
-        $videoId    = $matcher->matchRequest(new Request\Request($enviroment));
+        $enviroment = new Enviroment($enviromentData);
+        $matchedRoute    = $matcher->matchRequest(new Request($enviroment));
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals(['testModule', 'test', 'view', 123], $matchedRoute->getParameters());
     }
 
     /**
@@ -448,16 +477,16 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testWithoutModeRewriteFullUrl()
     {
-        $routeCollection = new Collection(new RouteBuilder());
+        $routeCollection = new Collection(new Base());
         $routeCollection->get(
             '/{module}/{controler}/{action}/{id:\d+}',
             ['module'=> '{module}', 'controler'=>'{controler}', 'action'=>'{action}']
         );
 
-        $dispatcher = new DispatcherClass();
+        $dispatcher = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
+        $matcher = new Regex($routeCollection, $dispatcher);
         $matcher->setUrlFormat(RouteMode::GET_FORMAT);
 
         $enviromentData = [
@@ -466,10 +495,11 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             'REQUEST_URI' => '/index.php?r=testModule/test/view/123',
         ];
 
-        $enviroment = new Request\Enviroment($enviromentData);
-        $videoId    = $matcher->matchRequest(new Request\Request($enviroment));
+        $enviroment   = new Enviroment($enviromentData);
+        $matchedRoute = $matcher->matchRequest(new Request($enviroment));
 
-        $this->assertEquals(123, $videoId);
+        $this->assertInstanceOf(Parsed::class, $matchedRoute);
+        $this->assertEquals(['testModule', 'test', 'view', 123], $matchedRoute->getParameters());
     }
 
     /**
@@ -481,11 +511,11 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidUrlFormat()
     {
-        $routeCollection = new Collection(new RouteBuilder());
-        $dispatcher      = new DispatcherClass();
+        $routeCollection = new Collection(new Base());
+        $dispatcher      = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
+        $matcher = new Regex($routeCollection, $dispatcher);
         $matcher->setUrlFormat('invalid value');
     }
 
@@ -496,114 +526,21 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUrlFormat()
     {
-        $routeCollection = new Collection(new RouteBuilder());
-        $dispatcher      = new DispatcherClass();
+        $routeCollection = new Collection(new Base());
+        $dispatcher      = new ClassAutoBind();
         $dispatcher->setBaseNamespace('Test\Application');
 
-        $matcher = new Matcher($routeCollection, $dispatcher);
+        $matcher = new Regex($routeCollection, $dispatcher);
         $matcher->setUrlFormat(RouteMode::GET_FORMAT);
 
         $this->assertEquals(RouteMode::GET_FORMAT, $matcher->getUrlFormat());
     }
 }
 
-/* partial implementation of PSR-7 request for test purpose */
-namespace Kambo\Tests\Router\Request;
-
-class Request
-{
-    private $serverVariables;
-    private $uri;
-    private $enviroment;
-    private $queryParams;
-
-    public function __construct($enviroment = null)
-    {
-        $this->enviroment = $enviroment;
-        $this->uri = (new Uri($this->enviroment));
-    }
-
-    public function createFromServerVariables($serverVariables)
-    {
-        $this->serverVariables = $serverVariables;
-    }
-
-    public function getMethod()
-    {
-        return $this->enviroment->getRequestMethod();
-    }
-
-    public function getQueryParams()
-    {
-        if ($this->queryParams) {
-            return $this->queryParams;
-        }
-
-        parse_str($this->uri->getQuery(), $this->queryParams);
-
-        return $this->queryParams;
-    }
-
-    public function getUri()
-    {
-        return $this->uri;
-    }
-}
-
-class Uri
-{
-    private $enviroment;
-
-    public function __construct($enviroment = null)
-    {
-        $this->enviroment = $enviroment;
-    }
-
-    public function getPath()
-    {
-        return $this->enviroment->getRequestUri();
-    }
-
-    public function getQuery()
-    {
-        return $this->enviroment->getQueryString();
-    }
-}
-
-class Enviroment
-{
-    private $enviromentData = null;
-
-    public function __construct($enviromentData = null)
-    {
-        $this->fromArray($enviromentData);
-    }
-
-    public function fromArray($enviromentData)
-    {
-        $this->enviromentData = $enviromentData;
-    }
-
-    public function getQueryString()
-    {
-        return $this->enviromentData['QUERY_STRING'];
-    }
-
-    public function getRequestMethod()
-    {
-        return $this->enviromentData['REQUEST_METHOD'];
-    }
-
-    public function getRequestUri()
-    {
-        return $this->enviromentData['REQUEST_URI'];
-    }
-}
-
 /* test application */
 namespace Test\Application\Controllers;
 
-class videoControler
+class video2Controler
 {
     public function actionView($id)
     {
@@ -618,7 +555,7 @@ class videoControler
 
 namespace Test\Application\Modules\TestModule\Controllers;
 
-class testControler
+class test2Controler
 {
     public function actionview($id)
     {

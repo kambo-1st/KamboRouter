@@ -1,21 +1,22 @@
 <?php
+namespace Kambo\Router\Route\Route;
 
-namespace Kambo\Router\Route;
+use Kambo\Router\Route\Route;
 
 /**
  * Parsed route from matcher class.
  * Class is implemented as a proxy for existing Route object.
  *
+ * @package Kambo\Router\Route\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license Apache-2.0
- * @package Kambo\Router\Route
  */
-class ParsedRoute
+class Parsed
 {
     /**
      * Instance of original route
      *
-     * @var \Kambo\Router\Route
+     * @var \Kambo\Router\Route\Route
      */
     private $route;
 
@@ -36,7 +37,7 @@ class ParsedRoute
     /**
      * ParsedRoute constructor
      *
-     * @param \Kambo\Router\Route $route
+     * @param \Kambo\Router\Route\Route $route
      */
     public function __construct(/*Route*/ $route)
     {

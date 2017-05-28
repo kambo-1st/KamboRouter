@@ -1,5 +1,5 @@
 <?php
-namespace Kambo\Router\Dispatchers;
+namespace Kambo\Router\Dispatcher;
 
 // \Spl
 use Closure;
@@ -7,17 +7,17 @@ use InvalidArgumentException;
 use ReflectionFunction;
 
 // \Kambo\Router
-use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
-use Kambo\Router\Route\ParsedRoute;
+use Kambo\Router\Dispatcher;
+use Kambo\Router\Route\Route\Parsed;
 
 /**
  * Dispatcher with closure support
  *
+ * @package Kambo\Router\Dispatcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license Apache-2.0
- * @package Kambo\Router\Dispatchers
  */
-class DispatcherClosure implements DispatcherInterface
+class ClosureAutoBind implements Dispatcher
 {
     /**
      * Not found handler will be called if nothing has been found.
@@ -29,11 +29,13 @@ class DispatcherClosure implements DispatcherInterface
     /**
      * Dispatch found route with given parameters
      *
-     * @param ParsedRoute $route found route
+     * @param \Kambo\Router\Route\Route\Parsed $route      Instance of found and parsed route.
+     * @param array                            $parameters Additional parameters which will be passed into
+     *                                                     the dispatcher.
      *
      * @return mixed
      */
-    public function dispatchRoute(ParsedRoute $route, array $parameters)
+    public function dispatchRoute(Parsed $route, array $parameters)
     {
         $handler = $route->getHandler();
         if ($this->isClosure($handler)) {

@@ -1,21 +1,21 @@
 <?php
-namespace Kambo\Router\Dispatchers;
+namespace Kambo\Router\Dispatcher;
 
 // \Spl
 use ReflectionMethod;
 
 // \Kambo\Router
-use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
-use Kambo\Router\Route\ParsedRoute;
+use Kambo\Router\Dispatcher;
+use Kambo\Router\Route\Route\Parsed;
 
 /**
  * Class dispatcher with module/controller/action support
  *
+ * @package Kambo\Router\Dispatcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license Apache-2.0
- * @package Kambo\Router\Dispatchers
  */
-class DispatcherClass implements DispatcherInterface
+class ClassAutoBind implements Dispatcher
 {
     /**
      * Not found handler which will be called if nothing has been found.
@@ -58,11 +58,13 @@ class DispatcherClass implements DispatcherInterface
     /**
      * Dispatch found route with given parameters
      *
-     * @param ParsedRoute $route found route
+     * @param \Kambo\Router\Route\Route\Parsed $route      Instance of found and parsed route.
+     * @param array                            $parameters Additional parameters which will be passed into
+     *                                                     the dispatcher.
      *
      * @return mixed
      */
-    public function dispatchRoute(ParsedRoute $route, array $parameters)
+    public function dispatchRoute(Parsed $route, array $parameters)
     {
         $handler = $route->getHandler();
         if (isset($handler['controler']) && isset($handler['action'])) {

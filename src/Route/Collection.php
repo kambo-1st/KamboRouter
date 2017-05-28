@@ -6,16 +6,19 @@ namespace Kambo\Router\Route;
 use IteratorAggregate;
 use ArrayIterator;
 
-// Kambo\Router
+// Kambo\Router\Enum
 use Kambo\Router\Enum\Method;
+
+// Kambo\Router\Route
 use Kambo\Router\Route\Route;
+use Kambo\Router\Route\Builder;
 
 /**
  * Collection of all defined routes.
  *
+ * @package Kambo\Router\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license Apache-2.0
- * @package Kambo\Router\Route
  */
 class Collection implements IteratorAggregate
 {
@@ -29,28 +32,25 @@ class Collection implements IteratorAggregate
     /**
      * Contains all routes
      *
-     * @var array
+     * @var \Kambo\Router\Route\Builder
      */
     private $routeBuilder;
 
     /**
      * Route constructor
      *
-     * @param String $method
-     * @param String $url
-     * @param Mixed  $handler
+     * @param \Kambo\Router\Route\Builder $routeBuilder Builder which will be used for creating
+     *                                                  instance of the route object
      */
-    public function __construct($routeBuilder)
+    public function __construct(Builder $routeBuilder)
     {
         $this->routeBuilder = $routeBuilder;
     }
 
     /**
-     *
      * IteratorAggregate: returns the iterator object.
      *
      * @return ArrayIterator
-     *
      */
     public function getIterator()
     {
@@ -65,7 +65,7 @@ class Collection implements IteratorAggregate
      * @param mixed $handler handler which will be executed if the url match
      *                       the route
      *
-     * @return Kambo\Router\Route\Route Created route
+     * @return \Kambo\Router\Route\Route Created route
      */
     public function get($route, $handler)
     {
@@ -80,7 +80,7 @@ class Collection implements IteratorAggregate
      * @param mixed $handler handler which will be executed if the url match
      *                       the route
      *
-     * @return Kambo\Router\Route\Route Created route
+     * @return \Kambo\Router\Route\Route Created route
      */
     public function post($route, $handler)
     {
@@ -95,7 +95,7 @@ class Collection implements IteratorAggregate
      * @param mixed $handler handler which will be executed if the url match
      *                       the route
      *
-     * @return Kambo\Router\Route\Route Created route
+     * @return \Kambo\Router\Route\Route Created route
      */
     public function delete($route, $handler)
     {
@@ -110,7 +110,7 @@ class Collection implements IteratorAggregate
      * @param mixed $handler handler which will be executed if the url match
      *                       the route
      *
-     * @return Kambo\Router\Route\Route Created route
+     * @return \Kambo\Router\Route\Route Created route
      */
     public function put($route, $handler)
     {
@@ -125,7 +125,7 @@ class Collection implements IteratorAggregate
      * @param mixed $handler handler which will be executed if the url match
      *                       the route
      *
-     * @return Kambo\Router\Route\Route Created route
+     * @return \Kambo\Router\Route\Route Created route
      */
     public function any($route, $handler)
     {
@@ -141,7 +141,7 @@ class Collection implements IteratorAggregate
      * @param mixed $handler handler which will be executed if the
      *                       url matchs the route
      *
-     * @return Kambo\Router\Route\Route Created route
+     * @return \Kambo\Router\Route\Route Created route
      */
     public function createRoute($method, $route, $handler)
     {

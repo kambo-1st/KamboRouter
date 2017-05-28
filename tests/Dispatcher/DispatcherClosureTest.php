@@ -1,15 +1,15 @@
 <?php
-namespace Kambo\Tests\Router\Dispatchers;
+namespace Kambo\Tests\Router\Dispatcher;
 
-use Kambo\Router\Dispatchers\DispatcherClosure;
-use Kambo\Router\Route\ParsedRoute;
+use Kambo\Router\Dispatcher\ClosureAutoBind;
+use Kambo\Router\Route\Route\Parsed;
 
 /**
- * Unit tests for DispatcherClosure class
+ * Tests for DispatcherClosure class
  *
- * @package Kambo\Tests\Router\Dispatchers
+ * @package Kambo\Tests\Router\Dispatcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license MIT
+ * @license Apache-2.0
  */
 class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
      */
     public function testDispatchNotFound()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
         $dispatcherClosure->setNotFoundHandler(
             function () {
@@ -40,7 +40,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetNotFoundHandlerInvalidValue()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
         $dispatcherClosure->setNotFoundHandler(null);
     }
@@ -52,7 +52,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
      */
     public function testDispatchNotFoundNoHandler()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
         $this->assertNull($dispatcherClosure->dispatchNotFound());
     }
@@ -64,9 +64,9 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
      */
     public function testDispatchRoute()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
-        $route = $this->getMockBuilder(ParsedRoute::class)
+        $route = $this->getMockBuilder(Parsed::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
@@ -97,9 +97,9 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
      */
     public function testDispatchRouteInvalidHandler()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
-        $route = $this->getMockBuilder(ParsedRoute::class)
+        $route = $this->getMockBuilder(Parsed::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
@@ -128,9 +128,9 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
      */
     public function testDispatchRouteWithParameters()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
-        $route = $this->getMockBuilder(ParsedRoute::class)
+        $route = $this->getMockBuilder(Parsed::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 

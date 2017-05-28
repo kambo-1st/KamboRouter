@@ -6,8 +6,8 @@ namespace Kambo\Router;
 use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 
 //  \Kambo\Router
-use Kambo\Router\Route\Collection;
-use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
+use Kambo\Router\Dispatcher;
+use Kambo\Router\Matcher;
 
 /**
  * Match provided request object with all defined routes in route collection.
@@ -24,43 +24,41 @@ class Router
     /**
      * Instance of route collection
      *
-     * @var \Kambo\Router\Route\Collection
+     * @var \Kambo\Router\Matcher
      */
-    private $routes;
+    private $matcher;
 
     /**
      * Instance of Dispatcher which will dispatch the request
      *
-     * @var \Kambo\Router\Dispatchers\Interfaces\DispatcherInterface
+     * @var \Kambo\Router\Dispatcher
      */
     private $dispatcher;
 
     /**
      * Defualt constructor
      *
-     * @param \Kambo\Router\Route\Collection                           $routeCollection
-     * @param \Kambo\Router\Dispatchers\Interfaces\DispatcherInterface $dispatcher
+     * @param \Kambo\Router\Dispatcher $dispatcher
+     * @param \Kambo\Router\Matcher    $matcher
      *
      */
     public function __construct(
-        Collection $routeCollection,
-        DispatcherInterface $dispatcher,
-        $matcher
+        Dispatcher $dispatcher,
+        Matcher $matcher
     ) {
-        $this->routes     = $routeCollection;
         $this->dispatcher = $dispatcher;
         $this->matcher    = $matcher;
     }
 
     /**
      * Match request with provided routes.
-     * Get method and url from provided request and start matching.
      *
-     * @param ServerRequest $request instance of PSR 7 compatible request object
+     * @param ServerRequest $request    instance of PSR 7 compatible request object
+     * @param array         $parameters instance of PSR 7 compatible request object
      *
      * @return mixed
      */
-    public function matchRequest(ServerRequest $request, array $parameters)
+    public function dispatch(/*ServerRequest*/ $request, array $parameters)
     {
         $matchedRoute = $this->matcher->matchRequest($request);
         if ($matchedRoute !== false) {

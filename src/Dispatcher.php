@@ -1,25 +1,27 @@
 <?php
-namespace Kambo\Router\Dispatchers\Interfaces;
+namespace Kambo\Router;
 
-use Kambo\Router\Route\ParsedRoute;
+use Kambo\Router\Route\Route\Parsed;
 
 /**
  * Interface for dispatcher
  *
+ * @package Kambo\Router\Dispatchers\Interfaces
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license Apache-2.0
- * @package Kambo\Router\Dispatchers\Interfaces
  */
-interface DispatcherInterface
+interface Dispatcher
 {
     /**
      * Dispatch found route with given parameters
      *
-     * @param ParsedRoute $route Instance of found parsed route
+     * @param \Kambo\Router\Route\Route\Parsed $route      Instance of found and parsed route.
+     * @param array                            $parameters Additional parameters which will be passed into
+     *                                                     the dispatcher.
      *
      * @return mixed
      */
-    public function dispatchRoute(ParsedRoute $route, array $parameters);
+    public function dispatchRoute(Parsed $route, array $parameters);
 
     /**
      * Called if any of route did not match the request.
