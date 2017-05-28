@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/kambo-1st/KamboRouter.svg?branch=master)](https://travis-ci.org/kambo-1st/KamboRouter)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kambo-1st/KamboRouter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kambo-1st/KamboRouter/?branch=master)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/kambo-1st/KamboRouter.svg?style=flat-square)](https://scrutinizer-ci.com/g/kambo-1st/KamboRouter/)
-[![Software License](https://img.shields.io/badge/license-BSD-brightgreen.svg?style=flat-square)](LICENSE)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 Just another PHP router with following highlights:
 
@@ -151,4 +151,4 @@ http://{domain}/video/{integer number}
 http://{domain}/advert/{controler}/{action}/{integer number}
 
 ## License
-The MIT License (MIT), https://opensource.org/licenses/MIT
+Apache License, Version 2.0, http://opensource.org/licenses/Apache-2.0
