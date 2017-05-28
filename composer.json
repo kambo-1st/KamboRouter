@@ -13,6 +13,9 @@
         "php": ">=7.0",
         "kambo/enum": "dev-master"
     },
+    "require-dev": {
+        "phpunit/phpunit": "6.1.*"
+    },
     "autoload": {
         "psr-4": {
             "Kambo\\Router\\": "src"
