@@ -31,7 +31,7 @@ use Kambo\Tests\Router\Request\Request;
  *
  * @package Kambo\Tests\Router\Matcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class RegexTest extends \PHPUnit_Framework_TestCase
 {

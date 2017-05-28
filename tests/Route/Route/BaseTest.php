@@ -9,7 +9,7 @@ use Kambo\Router\Enum\Method;
  *
  * @package Kambo\Tests\Router\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class BaseTest extends \PHPUnit_Framework_TestCase
 {

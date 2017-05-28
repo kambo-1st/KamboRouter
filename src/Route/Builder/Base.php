@@ -9,7 +9,7 @@ use Kambo\Router\Route\Route\Base as BaseRoute;
  *
  * @package Kambo\Router\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class Base implements Builder
 {

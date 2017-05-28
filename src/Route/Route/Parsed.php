@@ -9,7 +9,7 @@ use Kambo\Router\Route\Route;
  *
  * @package Kambo\Router\Route\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class Parsed
 {

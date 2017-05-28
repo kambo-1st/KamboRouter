@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as ServerRequest;
  *
  * @package Kambo\Router
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 interface Matcher
 {

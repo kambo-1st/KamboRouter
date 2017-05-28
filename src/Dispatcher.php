@@ -8,7 +8,7 @@ use Kambo\Router\Route\Route\Parsed;
  *
  * @package Kambo\Router\Dispatchers\Interfaces
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 interface Dispatcher
 {

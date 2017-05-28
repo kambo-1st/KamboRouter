@@ -151,4 +151,4 @@ http://{domain}/video/{integer number}
 http://{domain}/advert/{controler}/{action}/{integer number}
 
 ## License
-Apache License, Version 2.0, http://opensource.org/licenses/Apache-2.0
+The MIT License (MIT), https://opensource.org/licenses/MIT

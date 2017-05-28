@@ -6,9 +6,9 @@ use Kambo\Enum\Enum;
 /**
  * Enum for route mode
  *
- * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
  * @package Kambo\Router\Enum
+ * @author  Bohuslav Simek <bohuslav@simek.si>
+ * @license MIT
  */
 class RouteMode extends Enum
 {

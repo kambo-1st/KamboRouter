@@ -9,7 +9,7 @@ use Kambo\Router\Route\Route\Parsed;
  *
  * @package Kambo\Tests\Router\Dispatcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
 {

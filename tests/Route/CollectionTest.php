@@ -12,7 +12,7 @@ use Kambo\Router\Enum\Method;
  *
  * @package Test
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {

@@ -18,7 +18,7 @@ use Kambo\Router\Route\Builder;
  *
  * @package Kambo\Router\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class Collection implements IteratorAggregate
 {

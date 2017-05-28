@@ -26,7 +26,7 @@ use Kambo\Tests\Router\Request\Request;
  *
  * @package Kambo\Tests\Router
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {

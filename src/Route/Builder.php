@@ -6,7 +6,7 @@ namespace Kambo\Router\Route;
  *
  * @package Kambo\Router\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 interface Builder
 {

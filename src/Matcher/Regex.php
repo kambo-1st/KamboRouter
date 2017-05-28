@@ -27,7 +27,7 @@ use Kambo\Router\Enum\RouteMode;
  *
  * @package Kambo\Router\Matcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
 class Regex implements Matcher
 {
