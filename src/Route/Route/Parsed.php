@@ -39,7 +39,7 @@ class Parsed
      *
      * @param \Kambo\Router\Route\Route $route
      */
-    public function __construct(/*Route*/ $route)
+    public function __construct(Route $route)
     {
         $this->route = $route;
     }

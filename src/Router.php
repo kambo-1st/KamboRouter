@@ -54,7 +54,8 @@ class Router
      * Match request with provided routes.
      *
      * @param ServerRequest $request    instance of PSR 7 compatible request object
-     * @param array         $parameters instance of PSR 7 compatible request object
+     * @param array         $parameters Additional parameters which will be passed into
+     *                                  the dispatcher.
      *
      * @return mixed
      */

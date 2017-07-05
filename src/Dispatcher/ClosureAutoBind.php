@@ -30,8 +30,7 @@ class ClosureAutoBind implements Dispatcher
      * Dispatch found route with given parameters
      *
      * @param \Kambo\Router\Route\Route\Parsed $route      Instance of found and parsed route.
-     * @param array                            $parameters Additional parameters which will be passed into
-     *                                                     the dispatcher.
+     * @param array                            $parameters Additional parameters.
      *
      * @return mixed
      */
