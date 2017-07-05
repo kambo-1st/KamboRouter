@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Kambo\Router\Route\Route;
 
@@ -42,7 +43,7 @@ class Base implements Route
      * @param String $url
      * @param Mixed  $handler
      */
-    public function __construct($method, $url, $handler)
+    public function __construct(string $method, string $url, $handler)
     {
         $this->method  = $method;
         $this->handler = $handler;
@@ -56,7 +57,7 @@ class Base implements Route
      *
      * @return self for fluent interface
      */
-    public function setMethod($method)
+    public function setMethod(string $method) : Route
     {
         $this->method = $method;
 
@@ -68,7 +69,7 @@ class Base implements Route
      *
      * @return string
      */
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->method;
     }
@@ -80,7 +81,7 @@ class Base implements Route
      *
      * @return self for fluent interface
      */
-    public function setUrl($url)
+    public function setUrl(string $url) : Route
     {
         $this->url = $url;
 
@@ -92,7 +93,7 @@ class Base implements Route
      *
      * @return string
      */
-    public function getUrl()
+    public function getUrl() : string
     {
         return $this->url;
     }

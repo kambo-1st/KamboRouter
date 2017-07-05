@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Kambo\Router\Route\Route;
 
 use Kambo\Router\Route\Route;
@@ -50,8 +52,10 @@ class Parsed
      * @param string $name      Method name
      * @param array  $arguments The parameters to be passed to the method,
      *                          as an indexed array.
+     *
+     * @return mixed
      */
-    public function __call($name, array $arguments)
+    public function __call(string $name, array $arguments)
     {
         return call_user_func_array([$this->route, $name], $arguments);
     }
@@ -61,7 +65,7 @@ class Parsed
      *
      * @return string
      */
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->route->getMethod();
     }
@@ -79,11 +83,11 @@ class Parsed
     /**
      * Sets placeholders extracted from route.
      *
-     * @param mixed $parameters
+     * @param arrat $placeholders
      *
      * @return self for fluent interface
      */
-    public function setPlaceholders($placeholders)
+    public function setPlaceholders(array $placeholders) : Parsed
     {
         $this->placeholders = $placeholders;
 
@@ -95,7 +99,7 @@ class Parsed
      *
      * @return array
      */
-    public function getPlaceholders()
+    public function getPlaceholders() : array
     {
         return $this->placeholders;
     }
@@ -107,7 +111,7 @@ class Parsed
      *
      * @return self for fluent interface
      */
-    public function setParameters($parameters)
+    public function setParameters(array $parameters) : Parsed
     {
         $this->parameters = $parameters;
 
@@ -119,7 +123,7 @@ class Parsed
      *
      * @return array
      */
-    public function getParameters()
+    public function getParameters() : array
     {
         return $this->parameters;
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Kambo\Router;
 
 use Kambo\Router\Route\Route\Parsed;
@@ -16,7 +18,7 @@ interface Dispatcher
      * Dispatch found route with given parameters
      *
      * @param \Kambo\Router\Route\Route\Parsed $route      Instance of found and parsed route.
-     * @param array                            $parameters Additional parameters.
+     * @param array                            $parameters Additional parameters, which will passed into dispatcher.
      *
      * @return mixed
      */

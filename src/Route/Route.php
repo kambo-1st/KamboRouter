@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Kambo\Router\Route;
 
@@ -18,14 +19,14 @@ interface Route
      *
      * @return self for fluent interface
      */
-    public function setMethod($method);
+    public function setMethod(string $method) : Route;
 
     /**
      * Get route method
      *
      * @return string
      */
-    public function getMethod();
+    public function getMethod() : string;
 
     /**
      * Sets URL for route
@@ -34,14 +35,14 @@ interface Route
      *
      * @return self for fluent interface
      */
-    public function setUrl($url);
+    public function setUrl(string $url) : Route;
 
     /**
      * Get URL of route
      *
      * @return string
      */
-    public function getUrl();
+    public function getUrl() : string;
 
     /**
      * Sets handler that will be executed if the url will match the route.

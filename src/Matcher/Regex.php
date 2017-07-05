@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Kambo\Router\Matcher;
 
@@ -114,7 +115,7 @@ class Regex implements Matcher
      *
      * @return mixed
      */
-    public function matchPathAndMethod($method, $url)
+    public function matchPathAndMethod(string $method, string $url)
     {
         return $this->getMatchRoute($method, $url);
     }
@@ -128,17 +129,17 @@ class Regex implements Matcher
      *
      * @return self for fluent interface
      */
-    public function setUrlFormat($urlFormat)
+    public function setUrlFormat(string $urlFormat) : Matcher
     {
         if (RouteMode::inEnum($urlFormat)) {
             $this->urlFormat = $urlFormat;
-        } else {
-            throw new InvalidArgumentException(
-                'Value of urlFormat must be from RouteMode enum.'
-            );
+
+            return $this;
         }
 
-        return $this;
+        throw new InvalidArgumentException(
+            'Value of urlFormat must be from RouteMode enum.'
+        );
     }
 
     /**
@@ -146,7 +147,7 @@ class Regex implements Matcher
      *
      * @return string value from RouteMode enum
      */
-    public function getUrlFormat()
+    public function getUrlFormat() : string
     {
         return $this->urlFormat;
     }
@@ -162,12 +163,13 @@ class Regex implements Matcher
      *
      * @return mixed
      */
-    private function getMatchRoute($method, $url)
+    private function getMatchRoute(string $method, string $url)
     {
         $parsedRoutes = $this->parseRoutes($this->routeCollection);
         foreach ($parsedRoutes as $singleParsedRoute) {
             list($routeRegex, $route) = $singleParsedRoute;
-            $matchedParameters = $this->routeMatch($routeRegex, $url);
+            $matchedParameters        = $this->routeMatch($routeRegex, $url);
+
             if ($matchedParameters !== false) {
                 $routeMethod = $route->getMethod();
                 if ($routeMethod === $method || $routeMethod === Method::ANY) {
@@ -189,7 +191,7 @@ class Regex implements Matcher
      *
      * @return mixed
      */
-    private function routeMatch($routeRegex, $route)
+    private function routeMatch(string $routeRegex, string $route)
     {
         $matches = [];
         if (preg_match($routeRegex, $route, $matches)) {
@@ -208,7 +210,7 @@ class Regex implements Matcher
      *
      * @return array transformed routes
      */
-    private function parseRoutes(Collection $routes)
+    private function parseRoutes(Collection $routes) : array
     {
         $parsedRoutes = [];
         foreach ($routes as $route) {
@@ -233,19 +235,20 @@ class Regex implements Matcher
      *
      * @return string
      */
-    private function getUrl($request)
+    private function getUrl($request) : string
     {
         if ($this->urlFormat === RouteMode::PATH_FORMAT) {
-            $path = $request->getUri()->getPath();
-        } else {
-            $queryParams = $request->getQueryParams();
-            $route       = null;
-            if (isset($queryParams[$this->modeRewriteParameter])) {
-                $route = $queryParams[$this->modeRewriteParameter];
-            }
-
-            $path = '/'.$route;
+            return $request->getUri()->getPath();
         }
+
+        $queryParams = $request->getQueryParams();
+        $route       = '';
+
+        if (isset($queryParams[$this->modeRewriteParameter])) {
+            $route = $queryParams[$this->modeRewriteParameter];
+        }
+
+        $path = '/'.$route;
 
         return $path;
     }
@@ -257,26 +260,11 @@ class Regex implements Matcher
      *
      * @return array regex and parameters
      */
-    private function transformRoute($route)
+    private function transformRoute(string $route) : array
     {
         $parameters = $this->extractVariableRouteParts($route);
-        if (isset($parameters)) {
-            foreach ($parameters as $variables) {
-                list($valueToReplace, , $parametersVariables) = array_pad(
-                    $variables,
-                    3,
-                    null
-                );
-                if (isset($parametersVariables)) {
-                    $route = str_replace(
-                        $valueToReplace,
-                        '('.reset($parametersVariables).')',
-                        $route
-                    );
-                } else {
-                    $route = str_replace($valueToReplace, '([^/]+)', $route);
-                }
-            }
+        foreach ($parameters as $variables) {
+            $route = $this->transformRouteVariables($route, $variables);
         }
 
         $route = '~^'.$route.'$~';
@@ -285,15 +273,42 @@ class Regex implements Matcher
     }
 
     /**
-     * Extract variables from route
+     * Prepare regex for resolving route a extract variables from route.
+     *
+     * @param string $route     Route
+     * @param array  $variables Variables
+     *
+     * @return string Transformed route
+     */
+    private function transformRouteVariables(string $route, array $variables) : string
+    {
+        list($valueToReplace, , $parametersVariables) = array_pad(
+            $variables,
+            3,
+            null
+        );
+
+        if (isset($parametersVariables)) {
+            return str_replace(
+                $valueToReplace,
+                '('.reset($parametersVariables).')',
+                $route
+            );
+        }
+
+        return str_replace($valueToReplace, '([^/]+)', $route);
+    }
+
+    /**
+     * Extract variables from the route
      *
      * @param string $route
      *
-     * @return null|array
+     * @return array
      */
-    private function extractVariableRouteParts($route)
+    private function extractVariableRouteParts(string $route) : array
     {
-        $matches = null;
+        $matches = [];
         preg_match_all(
             self::VARIABLE_REGEX,
             $route,

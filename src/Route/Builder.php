@@ -1,8 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Kambo\Router\Route;
 
+use Kambo\Router\Route\Route;
+
 /**
- * Route builder interface - all builders must implement this interface.
+ * Route builder interface - all route builders must implement this interface.
  *
  * @package Kambo\Router\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
@@ -20,5 +24,5 @@ interface Builder
      *
      * @return \Kambo\Router\Route\Route Instance implementing Route interface
      */
-    public function build($method, $url, $handler);
+    public function build(string $method, string $url, $handler) : Route;
 }

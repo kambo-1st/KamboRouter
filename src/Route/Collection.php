@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Kambo\Router\Route;
 
@@ -40,7 +41,7 @@ class Collection implements IteratorAggregate
      * Route constructor
      *
      * @param \Kambo\Router\Route\Builder $routeBuilder Builder which will be used for creating
-     *                                                  instance of the route object
+     *                                                  instance of the route object.
      */
     public function __construct(Builder $routeBuilder)
     {
@@ -52,7 +53,7 @@ class Collection implements IteratorAggregate
      *
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator() : ArrayIterator
     {
         return new ArrayIterator($this->routes);
     }
@@ -67,7 +68,7 @@ class Collection implements IteratorAggregate
      *
      * @return \Kambo\Router\Route\Route Created route
      */
-    public function get($route, $handler)
+    public function get(string $route, $handler) : Route
     {
         return $this->createRoute(Method::GET, $route, $handler);
     }
@@ -82,7 +83,7 @@ class Collection implements IteratorAggregate
      *
      * @return \Kambo\Router\Route\Route Created route
      */
-    public function post($route, $handler)
+    public function post(string $route, $handler) : Route
     {
         return $this->createRoute(Method::POST, $route, $handler);
     }
@@ -97,7 +98,7 @@ class Collection implements IteratorAggregate
      *
      * @return \Kambo\Router\Route\Route Created route
      */
-    public function delete($route, $handler)
+    public function delete(string $route, $handler) : Route
     {
         return $this->createRoute(Method::DELETE, $route, $handler);
     }
@@ -112,7 +113,7 @@ class Collection implements IteratorAggregate
      *
      * @return \Kambo\Router\Route\Route Created route
      */
-    public function put($route, $handler)
+    public function put(string $route, $handler) : Route
     {
         return $this->createRoute(Method::PUT, $route, $handler);
     }
@@ -127,7 +128,7 @@ class Collection implements IteratorAggregate
      *
      * @return \Kambo\Router\Route\Route Created route
      */
-    public function any($route, $handler)
+    public function any(string $route, $handler) : Route
     {
         return $this->createRoute(Method::ANY, $route, $handler);
     }
@@ -143,7 +144,7 @@ class Collection implements IteratorAggregate
      *
      * @return \Kambo\Router\Route\Route Created route
      */
-    public function createRoute($method, $route, $handler)
+    public function createRoute(string $method, string $route, $handler) : Route
     {
         $createdRoute   = $this->routeBuilder->build($method, $route, $handler);
         $this->routes[] = $createdRoute;
@@ -159,7 +160,7 @@ class Collection implements IteratorAggregate
      *
      * @return self for fluent interface
      */
-    public function addRoute(Route $route)
+    public function addRoute(Route $route) : Collection
     {
         $this->routes[] = $route;
 

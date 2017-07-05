@@ -82,7 +82,7 @@ class ParsedTest extends TestCase
              *
              * @return self for fluent interface
              */
-            public function setMethod($method)
+            public function setMethod(string $method) : Route
             {
                 $this->method = $method;
             }
@@ -92,7 +92,7 @@ class ParsedTest extends TestCase
              *
              * @return string
              */
-            public function getMethod()
+            public function getMethod() : string
             {
             }
 
@@ -103,9 +103,11 @@ class ParsedTest extends TestCase
              *
              * @return self for fluent interface
              */
-            public function setUrl($url)
+            public function setUrl(string $url) : Route
             {
                 $this->url = $url;
+
+                return $this;
             }
 
             /**
@@ -113,7 +115,7 @@ class ParsedTest extends TestCase
              *
              * @return string
              */
-            public function getUrl()
+            public function getUrl() : string
             {
             }
 

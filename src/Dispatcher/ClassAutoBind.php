@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Kambo\Router\Dispatcher;
 
 // \Spl
@@ -141,7 +143,7 @@ class ClassAutoBind implements Dispatcher
      *
      * @return self for fluent interface
      */
-    public function setBaseNamespace($baseNamespace)
+    public function setBaseNamespace(string $baseNamespace)
     {
         $this->baseNamespace = $baseNamespace;
 
@@ -151,7 +153,7 @@ class ClassAutoBind implements Dispatcher
     /**
      * Sets not found handler
      *
-     * @param string $handler handler that will be excuted if nothing has been
+     * @param mixed $handler handler that will be excuted if nothing has been
      *                        found
      *
      * @return self for fluent interface
@@ -269,11 +271,11 @@ class ClassAutoBind implements Dispatcher
     /**
      * Check if the variable is placeholder
      *
-     * @param string $value  found route
+     * @param string $value found route
      *
      * @return boolean true if value should be transfered
      */
-    private function isPlaceholder($value)
+    private function isPlaceholder(string $value) : bool
     {
         if (strrchr($value, '}') && (0 === strpos($value, '{'))) {
             return true;
@@ -331,15 +333,16 @@ class ClassAutoBind implements Dispatcher
     /**
      * Get names of parameters for provided class and method
      *
-     * @param class  $class      name of class
+     * @param string $class      name of class
      * @param string $methodName name of method
      *
      * @return array
      */
-    private function getMethodParameters($class, $methodName)
+    private function getMethodParameters(string $class, string $methodName) : array
     {
         $methodReflection = new ReflectionMethod($class, $methodName);
         $parametersName   = [];
+
         foreach ($methodReflection->getParameters() as $parameter) {
             $parametersName[] = $parameter->name;
         }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Kambo\Router;
 
@@ -34,5 +35,5 @@ interface Matcher
      *
      * @return mixed
      */
-    public function matchPathAndMethod($method, $url);
+    public function matchPathAndMethod(string $method, string $url);
 }
