@@ -37,7 +37,7 @@ class Parsed
     /**
      * ParsedRoute constructor
      *
-     * @param \Kambo\Router\Route\Route $route
+     * @param \Kambo\Router\Route\Route $route Existing route which will be used as a base for proxy.
      */
     public function __construct(Route $route)
     {
@@ -45,7 +45,7 @@ class Parsed
     }
 
     /**
-     * Magic method for proxing methods call to parent object.
+     * Magic method for proxing methods call to parent route.
      *
      * @param string $name      Method name
      * @param array  $arguments The parameters to be passed to the method,

@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__.'/Request/Enviroment.php';
 require_once __DIR__.'/Request/Request.php';
 require_once __DIR__.'/Request/Uri.php';
+require_once __DIR__.'/Application/Modules/TestModule/Controllers/TestControler.php';
+require_once __DIR__.'/Application/Controllers/VideoControler.php';
 
 use Kambo\Router\Route\Collection;
 use Kambo\Router\Route\Builder\Base;
@@ -33,7 +35,7 @@ use Kambo\Tests\Router\Request\Request;
 class RouterTest extends TestCase
 {
     /**
-     * testAnonymousFunctionStatic
+     * Tests execution of closure with static route.
      *
      * @return void
      */
@@ -58,7 +60,7 @@ class RouterTest extends TestCase
     }
 
     /**
-     * testAnonymousFunctionStaticGetPost
+     * Tests execution of closure with static route for GET and POST method.
      *
      * @return void
      */
@@ -90,7 +92,7 @@ class RouterTest extends TestCase
     }
 
     /**
-     * testAnonymousFunctionStaticAny
+     * Tests execution of closure for any method.
      *
      * @return void
      */
@@ -115,7 +117,7 @@ class RouterTest extends TestCase
     }
 
     /**
-     * testRouteNotFoundAnonymousFunction
+     * Tests execution of closure for not found handler.
      *
      * @return void
      */
@@ -141,7 +143,7 @@ class RouterTest extends TestCase
     }
 
     /**
-     * testRouteNotFoundControlerHandler
+     * Tests execution of class for not found handler.
      *
      * @return void
      */
@@ -150,7 +152,7 @@ class RouterTest extends TestCase
         $routeCollection = new Collection(new Base());
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
         $dispatcher->setNotFoundHandler(['controler'=>'videoControler', 'action'=>'notFound']);
 
         $matcher = new Regex($routeCollection);
@@ -249,7 +251,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
 
@@ -274,7 +276,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
 
@@ -299,7 +301,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
 
@@ -324,7 +326,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
 
@@ -349,7 +351,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
 
@@ -378,7 +380,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
 
@@ -407,7 +409,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
 
@@ -436,7 +438,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
 
@@ -481,7 +483,7 @@ class RouterTest extends TestCase
         $routeCollection = new Collection(new Base());
 
         $dispatcher = new ClassAutoBind($routeCollection);
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
         $dispatcher->setNotFoundHandler(
             [
                 'controler' => 'videoControler',
@@ -516,7 +518,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
         $matcher->setUrlFormat(RouteMode::GET_FORMAT);
@@ -546,7 +548,7 @@ class RouterTest extends TestCase
         );
 
         $dispatcher = new ClassAutoBind();
-        $dispatcher->setBaseNamespace('Test\Application');
+        $dispatcher->setBaseNamespace('Kambo\Tests\Router\Application');
 
         $matcher = new Regex($routeCollection);
         $matcher->setUrlFormat(RouteMode::GET_FORMAT);
@@ -599,14 +601,24 @@ class RouterTest extends TestCase
 
     // ------------ PRIVATE METHODS
 
-    private function getRouter($dispatcher, $matcher)
+    /**
+     * Get instance of the Router object for testing
+     *
+     * @return Router
+     */
+    private function getRouter($dispatcher, $matcher) : Router
     {
         $router = new Router($dispatcher, $matcher);
 
         return $router;
     }
 
-    private function getRequest($method, $url = '/', $query = '')
+    /**
+     * Get instance of the Request object for testing
+     *
+     * @return Request
+     */
+    private function getRequest(string $method, string $url = '/', string $query = '') : Request
     {
         $enviromentData = [
             'QUERY_STRING' => $query,
@@ -617,31 +629,5 @@ class RouterTest extends TestCase
         $enviroment = new Enviroment($enviromentData);
 
         return new Request($enviroment);
-    }
-}
-
-/* test application */
-namespace Test\Application\Controllers;
-
-class videoControler
-{
-    public function actionView($id)
-    {
-        return $id;
-    }
-
-    public function actionNotFound()
-    {
-        return 'not found';
-    }
-}
-
-namespace Test\Application\Modules\TestModule\Controllers;
-
-class testControler
-{
-    public function actionview($id)
-    {
-        return $id;
     }
 }

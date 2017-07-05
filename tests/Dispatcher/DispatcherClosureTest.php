@@ -16,7 +16,7 @@ use Kambo\Router\Route\Route\Parsed;
 class DispatcherClosureTest extends TestCase
 {
     /**
-     * Test testDispatchNotFound method
+     * Test dispatchNotFound method
      *
      * @return void
      */
@@ -48,7 +48,7 @@ class DispatcherClosureTest extends TestCase
     }
 
     /**
-     * Test testDispatchNotFound method
+     * Test dispatchNotFound method
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class DispatcherClosureTest extends TestCase
     }
 
     /**
-     * Test testDispatchRoute method
+     * Test dispatchRoute method
      *
      * @return void
      */
@@ -93,7 +93,7 @@ class DispatcherClosureTest extends TestCase
     }
 
     /**
-     * Test testDispatchRoute method
+     * Test dispatchRoute method
      *
      * @return void
      */
@@ -124,7 +124,7 @@ class DispatcherClosureTest extends TestCase
     }
 
     /**
-     * Test testDispatchRoute method
+     * Test dispatchRoute method
      *
      * @return void
      */

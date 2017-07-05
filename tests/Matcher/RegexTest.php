@@ -538,29 +538,3 @@ class RegexTest extends TestCase
         $this->assertEquals(RouteMode::GET_FORMAT, $matcher->getUrlFormat());
     }
 }
-
-/* test application */
-namespace Test\Application\Controllers;
-
-class video2Controler
-{
-    public function actionView($id)
-    {
-        return $id;
-    }
-
-    public function actionNotFound()
-    {
-        return 'not found';
-    }
-}
-
-namespace Test\Application\Modules\TestModule\Controllers;
-
-class test2Controler
-{
-    public function actionview($id)
-    {
-        return $id;
-    }
-}
