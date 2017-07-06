@@ -60,7 +60,7 @@ class Router
      *
      * @return mixed
      */
-    public function dispatch($request, array $parameters)
+    public function dispatch(ServerRequest $request, array $parameters)
     {
         $matchedRoute = $this->matcher->matchRequest($request);
         if ($matchedRoute !== false) {

@@ -99,7 +99,7 @@ class Regex implements Matcher
      *
      * @return mixed
      */
-    public function matchRequest($request)
+    public function matchRequest(ServerRequest $request)
     {
         return $this->getMatchRoute(
             $request->getMethod(),

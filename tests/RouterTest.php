@@ -3,12 +3,6 @@ namespace Kambo\Tests\Router;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/Request/Enviroment.php';
-require_once __DIR__.'/Request/Request.php';
-require_once __DIR__.'/Request/Uri.php';
-require_once __DIR__.'/Application/Modules/TestModule/Controllers/TestControler.php';
-require_once __DIR__.'/Application/Controllers/VideoControler.php';
-
 use Kambo\Router\Route\Collection;
 use Kambo\Router\Route\Builder\Base;
 

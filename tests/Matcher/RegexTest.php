@@ -3,13 +3,6 @@ namespace Kambo\Tests\Router\Matcher;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/../Request/Enviroment.php';
-require_once __DIR__.'/../Request/Request.php';
-require_once __DIR__.'/../Request/Uri.php';
-
-// \Psr\Http\Message
-use Psr\Http\Message\ServerRequestInterface as ServerRequest;
-
 // \Kambo\Router\Route
 use Kambo\Router\Route\Collection;
 use Kambo\Router\Route\Builder\Base;
@@ -38,7 +31,7 @@ use Kambo\Tests\Router\Request\Request;
 class RegexTest extends TestCase
 {
     /**
-     * testAnonymousFunctionStatic
+     * Tests execution of closure with static route.
      *
      * @return void
      */
@@ -59,7 +52,7 @@ class RegexTest extends TestCase
     }
 
     /**
-     * testAnonymousFunctionStaticGetPost
+     * Tests execution of closure with static route for GET and POST method.
      *
      * @return void
      */
@@ -87,7 +80,7 @@ class RegexTest extends TestCase
     }
 
     /**
-     * testAnonymousFunctionStaticAny
+     * Tests execution of closure for any method.
      *
      * @return void
      */
@@ -109,7 +102,7 @@ class RegexTest extends TestCase
     }
 
     /**
-     * testRouteNotFoundAnonymousFunction
+     * Tests execution of closure for not found handler.
      *
      * @return void
      */
@@ -127,7 +120,7 @@ class RegexTest extends TestCase
     }
 
     /**
-     * testRouteNotFoundControlerHandler
+     * Tests execution of not found handler.
      *
      * @return void
      */

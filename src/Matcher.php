@@ -25,7 +25,7 @@ interface Matcher
      *
      * @return mixed
      */
-    public function matchRequest($request);
+    public function matchRequest(ServerRequest $request);
 
     /**
      * Match url and method with provided routes.
