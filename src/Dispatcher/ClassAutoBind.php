@@ -65,7 +65,7 @@ class ClassAutoBind implements Dispatcher
      *
      * @return mixed
      */
-    public function dispatchRoute(Parsed $route, array $parameters)
+    public function dispatchRoute(Parsed $route, array $parameters = [])
     {
         $handler = $route->getHandler();
         if (isset($handler['controler']) && isset($handler['action'])) {

@@ -36,7 +36,7 @@ class ClosureAutoBind implements Dispatcher
      *
      * @return mixed|null
      */
-    public function dispatchRoute(Parsed $route, array $parameters)
+    public function dispatchRoute(Parsed $route, array $parameters = [])
     {
         $handler = $route->getHandler();
         if ($this->isClosure($handler)) {

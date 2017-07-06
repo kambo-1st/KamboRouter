@@ -22,7 +22,7 @@ interface Dispatcher
      *
      * @return mixed
      */
-    public function dispatchRoute(Parsed $route, array $parameters);
+    public function dispatchRoute(Parsed $route, array $parameters = []);
 
     /**
      * Called if any of route did not match the request.
