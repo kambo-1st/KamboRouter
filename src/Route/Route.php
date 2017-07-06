@@ -1,33 +1,17 @@
 <?php
+declare(strict_types=1);
+
 namespace Kambo\Router\Route;
 
 /**
- * Class representing the Route
+ * Route interface - all routes must implement this interface.
  *
- * @author   Bohuslav Simek <bohuslav@simek.si>
- * @license  Apache-2.0
- * @package  Kambo\Router\Route
+ * @package Kambo\Router\Route
+ * @author  Bohuslav Simek <bohuslav@simek.si>
+ * @license MIT
  */
-class Route
+interface Route
 {
-    private $method  = null;
-    private $handler = null;
-    private $url     = null;
-
-    /**
-     * Route constructor
-     *
-     * @param String $method
-     * @param String $url
-     * @param Mixed  $handler
-     */
-    public function __construct($method, $url, $handler)
-    {
-        $this->method  = $method;
-        $this->handler = $handler;
-        $this->url     = $url;
-    }
-
     /**
      * Sets route method
      *
@@ -35,22 +19,14 @@ class Route
      *
      * @return self for fluent interface
      */
-    public function setMethod($method)
-    {
-        $this->method = $method;
-
-        return $this;
-    }
+    public function setMethod(string $method) : Route;
 
     /**
      * Get route method
      *
      * @return string
      */
-    public function getMethod()
-    {
-        return $this->method;
-    }
+    public function getMethod() : string;
 
     /**
      * Sets URL for route
@@ -59,22 +35,14 @@ class Route
      *
      * @return self for fluent interface
      */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
+    public function setUrl(string $url) : Route;
 
     /**
      * Get URL of route
      *
      * @return string
      */
-    public function getUrl()
-    {
-        return $this->url;
-    }
+    public function getUrl() : string;
 
     /**
      * Sets handler that will be executed if the url will match the route.
@@ -84,20 +52,12 @@ class Route
      *
      * @return self for fluent interface
      */
-    public function setHandler($handler)
-    {
-        $this->handler = $handler;
-
-        return $this;
-    }
+    public function setHandler($handler);
 
     /**
      * Get handler
      *
      * @return mixed
      */
-    public function getHandler()
-    {
-        return $this->handler;
-    }
+    public function getHandler();
 }

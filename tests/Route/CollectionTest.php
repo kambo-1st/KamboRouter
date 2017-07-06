@@ -1,8 +1,11 @@
 <?php
 namespace Kambo\Tests\Router\Route;
 
+use PHPUnit\Framework\TestCase;
+
+use Kambo\Router\Route\Builder\Base as BaseBuilder;
 use Kambo\Router\Route\Collection;
-use Kambo\Router\Route\Route;
+use Kambo\Router\Route\Route\Base as BaseRouter;
 
 use Kambo\Router\Enum\Method;
 
@@ -11,9 +14,9 @@ use Kambo\Router\Enum\Method;
  *
  * @package Test
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
+ * @license MIT
  */
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends TestCase
 {
     /**
      * Test get method
@@ -22,14 +25,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $testInstance = new Collection();
+        $testInstance = new Collection(new BaseBuilder());
         $testInstance->get(
             'test.com/test',
             function () {
             }
         );
 
-        $definedRoute = $testInstance->getRoutes()[0];
+        $definedRoute = iterator_to_array($testInstance)[0];
         $this->assertEquals(Method::GET, $definedRoute->getMethod());
         $this->assertEquals('test.com/test', $definedRoute->getUrl());
         $this->assertTrue($this->isClosure($definedRoute->getHandler()));
@@ -42,14 +45,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testPost()
     {
-        $testInstance = new Collection();
+        $testInstance = new Collection(new BaseBuilder());
         $testInstance->post(
             'test.com/test',
             function () {
             }
         );
 
-        $definedRoute = $testInstance->getRoutes()[0];
+        $definedRoute = iterator_to_array($testInstance)[0];
         $this->assertEquals(Method::POST, $definedRoute->getMethod());
         $this->assertEquals('test.com/test', $definedRoute->getUrl());
         $this->assertTrue($this->isClosure($definedRoute->getHandler()));
@@ -62,14 +65,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
-        $testInstance = new Collection();
+        $testInstance = new Collection(new BaseBuilder());
         $testInstance->delete(
             'test.com/test',
             function () {
             }
         );
 
-        $definedRoute = $testInstance->getRoutes()[0];
+        $definedRoute = iterator_to_array($testInstance)[0];
         $this->assertEquals(Method::DELETE, $definedRoute->getMethod());
         $this->assertEquals('test.com/test', $definedRoute->getUrl());
         $this->assertTrue($this->isClosure($definedRoute->getHandler()));
@@ -82,14 +85,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testPut()
     {
-        $testInstance = new Collection();
+        $testInstance = new Collection(new BaseBuilder());
         $testInstance->put(
             'test.com/test',
             function () {
             }
         );
 
-        $definedRoute = $testInstance->getRoutes()[0];
+        $definedRoute = iterator_to_array($testInstance)[0];
         $this->assertEquals(Method::PUT, $definedRoute->getMethod());
         $this->assertEquals('test.com/test', $definedRoute->getUrl());
         $this->assertTrue($this->isClosure($definedRoute->getHandler()));
@@ -102,14 +105,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAny()
     {
-        $testInstance = new Collection();
+        $testInstance = new Collection(new BaseBuilder());
         $testInstance->any(
             'test.com/test',
             function () {
             }
         );
 
-        $definedRoute = $testInstance->getRoutes()[0];
+        $definedRoute = iterator_to_array($testInstance)[0];
         $this->assertEquals(Method::ANY, $definedRoute->getMethod());
         $this->assertEquals('test.com/test', $definedRoute->getUrl());
         $this->assertTrue($this->isClosure($definedRoute->getHandler()));
@@ -122,7 +125,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateRoute()
     {
-        $testInstance = new Collection();
+        $testInstance = new Collection(new BaseBuilder());
         $testInstance->createRoute(
             Method::ANY,
             'test.com/any',
@@ -143,8 +146,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $definedRoutes = $testInstance->getRoutes();
-        list($routeAny, $routePost, $routeGet) = $testInstance->getRoutes();
+        list($routeAny, $routePost, $routeGet) = iterator_to_array($testInstance);
 
         $this->assertEquals(Method::ANY, $routeAny->getMethod());
         $this->assertEquals('test.com/any', $routeAny->getUrl());
@@ -163,9 +165,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddRoute()
     {
-        $testInstance = new Collection();
+        $testInstance = new Collection(new BaseBuilder());
 
-        $route = new Route(
+        $route = new BaseRouter(
             Method::ANY,
             'test.com/any',
             function () {
@@ -173,7 +175,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         );
         $testInstance->addRoute($route);
 
-        $route = new Route(
+        $route = new BaseRouter(
             Method::POST,
             'test.com/post',
             function () {
@@ -181,7 +183,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         );
         $testInstance->addRoute($route);
 
-        $route = new Route(
+        $route = new BaseRouter(
             Method::GET,
             'test.com/get',
             function () {
@@ -189,8 +191,8 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         );
         $testInstance->addRoute($route);
 
-        $definedRoutes = $testInstance->getRoutes();
-        list($routeAny, $routePost, $routeGet) = $testInstance->getRoutes();
+        //$definedRoutes = $testInstance->getRoutes();
+        list($routeAny, $routePost, $routeGet) = iterator_to_array($testInstance);
 
         $this->assertEquals(Method::ANY, $routeAny->getMethod());
         $this->assertEquals('test.com/any', $routeAny->getUrl());

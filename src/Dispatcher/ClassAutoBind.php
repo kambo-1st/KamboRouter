@@ -1,21 +1,23 @@
 <?php
-namespace Kambo\Router\Dispatchers;
+declare(strict_types=1);
+
+namespace Kambo\Router\Dispatcher;
 
 // \Spl
 use ReflectionMethod;
 
 // \Kambo\Router
-use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
-use Kambo\Router\Route\ParsedRoute;
+use Kambo\Router\Dispatcher;
+use Kambo\Router\Route\Route\Parsed;
 
 /**
  * Class dispatcher with module/controller/action support
  *
+ * @package Kambo\Router\Dispatcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
- * @package Kambo\Router\Dispatchers
+ * @license MIT
  */
-class DispatcherClass implements DispatcherInterface
+class ClassAutoBind implements Dispatcher
 {
     /**
      * Not found handler which will be called if nothing has been found.
@@ -58,11 +60,12 @@ class DispatcherClass implements DispatcherInterface
     /**
      * Dispatch found route with given parameters
      *
-     * @param ParsedRoute $route found route
+     * @param \Kambo\Router\Route\Route\Parsed $route      Instance of found and parsed route.
+     * @param array                            $parameters Additional parameters.
      *
      * @return mixed
      */
-    public function dispatchRoute(ParsedRoute $route)
+    public function dispatchRoute(Parsed $route, array $parameters = [])
     {
         $handler = $route->getHandler();
         if (isset($handler['controler']) && isset($handler['action'])) {
@@ -140,7 +143,7 @@ class DispatcherClass implements DispatcherInterface
      *
      * @return self for fluent interface
      */
-    public function setBaseNamespace($baseNamespace)
+    public function setBaseNamespace(string $baseNamespace)
     {
         $this->baseNamespace = $baseNamespace;
 
@@ -150,7 +153,7 @@ class DispatcherClass implements DispatcherInterface
     /**
      * Sets not found handler
      *
-     * @param string $handler handler that will be excuted if nothing has been
+     * @param mixed $handler handler that will be excuted if nothing has been
      *                        found
      *
      * @return self for fluent interface
@@ -268,11 +271,11 @@ class DispatcherClass implements DispatcherInterface
     /**
      * Check if the variable is placeholder
      *
-     * @param string $value  found route
+     * @param string $value found route
      *
      * @return boolean true if value should be transfered
      */
-    private function isPlaceholder($value)
+    private function isPlaceholder(string $value) : bool
     {
         if (strrchr($value, '}') && (0 === strpos($value, '{'))) {
             return true;
@@ -330,15 +333,16 @@ class DispatcherClass implements DispatcherInterface
     /**
      * Get names of parameters for provided class and method
      *
-     * @param class  $class      name of class
+     * @param string $class      name of class
      * @param string $methodName name of method
      *
      * @return array
      */
-    private function getMethodParameters($class, $methodName)
+    private function getMethodParameters(string $class, string $methodName) : array
     {
         $methodReflection = new ReflectionMethod($class, $methodName);
         $parametersName   = [];
+
         foreach ($methodReflection->getParameters() as $parameter) {
             $parametersName[] = $parameter->name;
         }

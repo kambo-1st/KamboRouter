@@ -1,0 +1,17 @@
+{
+    "description": "Kambo router example",
+    "license": "MIT",
+    "keywords": ["routing", "router", "example"],
+    "authors": [
+        {
+            "name": "Bohuslav Simek",
+            "email": "bohuslav@simek.si"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0",
+        "kambo/router": "dev-develop",
+        "kambo/httpmessage": "v0.9.0"
+    }
+}

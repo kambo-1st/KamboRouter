@@ -7,9 +7,9 @@ use Kambo\Enum\Enum;
 /**
  * Enum for HTTP methods
  *
- * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
  * @package Kambo\Router\Enum
+ * @author  Bohuslav Simek <bohuslav@simek.si>
+ * @license MIT
  */
 class Method extends Enum
 {

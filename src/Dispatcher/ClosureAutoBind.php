@@ -1,5 +1,7 @@
 <?php
-namespace Kambo\Router\Dispatchers;
+declare(strict_types=1);
+
+namespace Kambo\Router\Dispatcher;
 
 // \Spl
 use Closure;
@@ -7,17 +9,17 @@ use InvalidArgumentException;
 use ReflectionFunction;
 
 // \Kambo\Router
-use Kambo\Router\Dispatchers\Interfaces\DispatcherInterface;
-use Kambo\Router\Route\ParsedRoute;
+use Kambo\Router\Dispatcher;
+use Kambo\Router\Route\Route\Parsed;
 
 /**
  * Dispatcher with closure support
  *
+ * @package Kambo\Router\Dispatcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
- * @license Apache-2.0
- * @package Kambo\Router\Dispatchers
+ * @license MIT
  */
-class DispatcherClosure implements DispatcherInterface
+class ClosureAutoBind implements Dispatcher
 {
     /**
      * Not found handler will be called if nothing has been found.
@@ -29,11 +31,12 @@ class DispatcherClosure implements DispatcherInterface
     /**
      * Dispatch found route with given parameters
      *
-     * @param ParsedRoute $route found route
+     * @param \Kambo\Router\Route\Route\Parsed $route      Instance of found and parsed route.
+     * @param array                            $parameters Additional parameters.
      *
-     * @return mixed
+     * @return mixed|null
      */
-    public function dispatchRoute(ParsedRoute $route)
+    public function dispatchRoute(Parsed $route, array $parameters = [])
     {
         $handler = $route->getHandler();
         if ($this->isClosure($handler)) {
@@ -45,9 +48,9 @@ class DispatcherClosure implements DispatcherInterface
             );
 
             return call_user_func_array($handler, $arguments);
-        } else {
-            return $this->dispatchNotFound();
         }
+
+        return $this->dispatchNotFound();
     }
 
     /**
@@ -69,14 +72,14 @@ class DispatcherClosure implements DispatcherInterface
     /**
      * Sets not found handler
      *
-     * @param string $handler handler that will be excuted if nothing has been
+     * @param Closure $handler handler that will be excuted if nothing has been
      *                        found
      *
      * @return self for fluent interface
      *
      * @throws InvalidArgumentException if the provided value is not closure
      */
-    public function setNotFoundHandler($handler)
+    public function setNotFoundHandler($handler) : ClosureAutoBind
     {
         if (!$this->isClosure($handler)) {
             throw new InvalidArgumentException(
@@ -98,7 +101,7 @@ class DispatcherClosure implements DispatcherInterface
      *
      * @return boolean return true if is
      */
-    private function isClosure($type)
+    private function isClosure($type) : bool
     {
         return is_object($type) && ($type instanceof Closure);
     }
@@ -107,23 +110,22 @@ class DispatcherClosure implements DispatcherInterface
      * Get arguments for closure function in proper order
      * from provided parameters
      *
-     * @param mixed $paramMap   parameter map for getting proper order
-     * @param mixed $matches    parameters from request
-     * @param mixed $parameters expected parameters from route
+     * @param array $paramMap   parameter map for getting proper order
+     * @param array $matches    parameters from request
+     * @param array $parameters expected parameters from route
      *
      * @return array Parameters in right order, if there are not any
-     *         parametrs an empty array is returned.
+     *               parametrs an empty array is returned.
      */
-    private function getFunctionArguments($paramMap, $matches, $parameters)
+    private function getFunctionArguments(array $paramMap, array $matches, array $parameters) : array
     {
         $output  = [];
         $matches = array_values($matches);
-        if (isset($parameters)) {
-            foreach ($parameters as $valueName) {
-                foreach ($paramMap as $possition => $value) {
-                    if ($value == $valueName[1][0]) {
-                        $output[] = $matches[$possition];
-                    }
+
+        foreach ($parameters as $valueName) {
+            foreach ($paramMap as $possition => $value) {
+                if ($value == $valueName[1][0]) {
+                    $output[] = $matches[$possition];
                 }
             }
         }
@@ -138,10 +140,12 @@ class DispatcherClosure implements DispatcherInterface
      *
      * @return array
      */
-    private function getFunctionArgumentsNames($closure)
+    private function getFunctionArgumentsNames($closure) : array
     {
+        $result = [];
+
         $closureReflection = new ReflectionFunction($closure);
-        $result            = [];
+
         foreach ($closureReflection->getParameters() as $param) {
             $result[] = $param->name;
         }

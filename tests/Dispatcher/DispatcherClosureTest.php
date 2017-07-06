@@ -1,28 +1,28 @@
 <?php
-namespace Kambo\Tests\Router\Dispatchers;
+namespace Kambo\Tests\Router\Dispatcher;
 
-use Kambo\Router\Dispatchers\DispatcherClosure;
-use Kambo\Router\Route\ParsedRoute;
+use PHPUnit\Framework\TestCase;
+
+use Kambo\Router\Dispatcher\ClosureAutoBind;
+use Kambo\Router\Route\Route\Parsed;
 
 /**
- * Description of DispatcherClosureTest
+ * Tests for DispatcherClosure class
  *
- * Lorem ipsum dolor
- *
- * @package Kambo\Tests\Router\Dispatchers
+ * @package Kambo\Tests\Router\Dispatcher
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license MIT
  */
-class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
+class DispatcherClosureTest extends TestCase
 {
     /**
-     * Test testDispatchNotFound method
+     * Test dispatchNotFound method
      *
      * @return void
      */
     public function testDispatchNotFound()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
         $dispatcherClosure->setNotFoundHandler(
             function () {
@@ -42,33 +42,33 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetNotFoundHandlerInvalidValue()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
         $dispatcherClosure->setNotFoundHandler(null);
     }
 
     /**
-     * Test testDispatchNotFound method
+     * Test dispatchNotFound method
      *
      * @return void
      */
     public function testDispatchNotFoundNoHandler()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
         $this->assertNull($dispatcherClosure->dispatchNotFound());
     }
 
     /**
-     * Test testDispatchRoute method
+     * Test dispatchRoute method
      *
      * @return void
      */
     public function testDispatchRoute()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
-        $route = $this->getMockBuilder(ParsedRoute::class)
+        $route = $this->getMockBuilder(Parsed::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
@@ -89,19 +89,19 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertTrue($dispatcherClosure->dispatchRoute($route));
+        $this->assertTrue($dispatcherClosure->dispatchRoute($route, []));
     }
 
     /**
-     * Test testDispatchRoute method
+     * Test dispatchRoute method
      *
      * @return void
      */
     public function testDispatchRouteInvalidHandler()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
-        $route = $this->getMockBuilder(ParsedRoute::class)
+        $route = $this->getMockBuilder(Parsed::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
@@ -120,19 +120,19 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertNull($dispatcherClosure->dispatchRoute($route));
+        $this->assertNull($dispatcherClosure->dispatchRoute($route, []));
     }
 
     /**
-     * Test testDispatchRoute method
+     * Test dispatchRoute method
      *
      * @return void
      */
     public function testDispatchRouteWithParameters()
     {
-        $dispatcherClosure = new DispatcherClosure();
+        $dispatcherClosure = new ClosureAutoBind();
 
-        $route = $this->getMockBuilder(ParsedRoute::class)
+        $route = $this->getMockBuilder(Parsed::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
@@ -185,7 +185,7 @@ class DispatcherClosureTest extends \PHPUnit_Framework_TestCase
         $expectedValues = ['foo', 'bar'];
         $this->assertEquals(
             $expectedValues,
-            $dispatcherClosure->dispatchRoute($route)
+            $dispatcherClosure->dispatchRoute($route, [])
         );
     }
 }

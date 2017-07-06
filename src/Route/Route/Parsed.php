@@ -1,21 +1,24 @@
 <?php
+declare(strict_types=1);
 
-namespace Kambo\Router\Route;
+namespace Kambo\Router\Route\Route;
+
+use Kambo\Router\Route\Route;
 
 /**
  * Parsed route from matcher class.
  * Class is implemented as a proxy for existing Route object.
  *
- * @package Kambo\Router\Route
+ * @package Kambo\Router\Route\Route
  * @author  Bohuslav Simek <bohuslav@simek.si>
  * @license MIT
  */
-class ParsedRoute
+class Parsed
 {
     /**
      * Instance of original route
      *
-     * @var \Kambo\Router\Route
+     * @var \Kambo\Router\Route\Route
      */
     private $route;
 
@@ -36,7 +39,7 @@ class ParsedRoute
     /**
      * ParsedRoute constructor
      *
-     * @param \Kambo\Router\Route $route
+     * @param \Kambo\Router\Route\Route $route Existing route which will be used as a base for proxy.
      */
     public function __construct(Route $route)
     {
@@ -44,11 +47,25 @@ class ParsedRoute
     }
 
     /**
+     * Magic method for proxing methods call to parent route.
+     *
+     * @param string $name      Method name
+     * @param array  $arguments The parameters to be passed to the method,
+     *                          as an indexed array.
+     *
+     * @return mixed
+     */
+    public function __call(string $name, array $arguments)
+    {
+        return call_user_func_array([$this->route, $name], $arguments);
+    }
+
+    /**
      * Get route method
      *
      * @return string
      */
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->route->getMethod();
     }
@@ -66,11 +83,11 @@ class ParsedRoute
     /**
      * Sets placeholders extracted from route.
      *
-     * @param mixed $parameters
+     * @param arrat $placeholders
      *
      * @return self for fluent interface
      */
-    public function setPlaceholders($placeholders)
+    public function setPlaceholders(array $placeholders) : Parsed
     {
         $this->placeholders = $placeholders;
 
@@ -82,7 +99,7 @@ class ParsedRoute
      *
      * @return array
      */
-    public function getPlaceholders()
+    public function getPlaceholders() : array
     {
         return $this->placeholders;
     }
@@ -94,7 +111,7 @@ class ParsedRoute
      *
      * @return self for fluent interface
      */
-    public function setParameters($parameters)
+    public function setParameters(array $parameters) : Parsed
     {
         $this->parameters = $parameters;
 
@@ -106,7 +123,7 @@ class ParsedRoute
      *
      * @return array
      */
-    public function getParameters()
+    public function getParameters() : array
     {
         return $this->parameters;
     }
