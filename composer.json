@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": ">=7.0",
+        "psr/http-message": "*",
         "kambo/enum": "dev-master"
     },
     "require-dev": {
